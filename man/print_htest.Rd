@@ -17,8 +17,8 @@ Function is based on package 'EnvStats'.
 https://rdrr.io/cran/EnvStats/src/R/print.htestEnvStats.R
 }
 \examples{
-print_htest(check_correl2("len", "dose", ToothGrowth)$test)
-print_htest(check_ttest2("len", "supp", ToothGrowth)$test)
+print_htest(test_correl("len", "dose", ToothGrowth)$test[[1]])
+print_htest(test_ttest("len", "supp", ToothGrowth)$test[[1]])
 }
 \seealso{
 NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)

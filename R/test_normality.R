@@ -1,29 +1,31 @@
 #' Performs a check on normality
 #'
 #' @param x A numeric vector of data values.
+#' @param data An optional data frame including `x` column.
 #' @param alpha Maximum accepted p-value for significance tests.
 #'
 #' @return Returns a list of all results.
 #' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
-#' @importFrom psych describe
-#' @importFrom dplyr filter
 #' @importFrom common spaces
 #' @importFrom crayon bold green red
+#' @importFrom dplyr filter
+#' @importFrom graphics boxplot hist mtext par
 #' @importFrom nortest ad.test cvm.test lillie.test pearson.test sf.test
-#' @importFrom stats na.omit shapiro.test
+#' @importFrom psych describe
+#' @importFrom readr read_csv
+#' @importFrom stats na.omit shapiro.test density qqline qqnorm
 #' @importFrom stringr str_trim
 #' @importFrom tseries jarque.bera.test
-#' @importFrom readr read_csv
 #' @export
 #'
 #' @examples
-#' check_normality(ToothGrowth$len)
-#' check_normality("len", ToothGrowth)
-#' check_normality(ToothGrowth[["len"]])
-#' check_normality(runif(233))
-#' check_normality(rnorm(233))
-#' check_normality("ERROR")
-check_normality <- function(x, data = "", alpha = .05) {
+#' test_normality(ToothGrowth$len)
+#' test_normality("len", ToothGrowth)
+#' test_normality(ToothGrowth[["len"]])
+#' test_normality(runif(233))
+#' test_normality(rnorm(233))
+#' test_normality("ERROR")
+test_normality <- function(x, data = "", alpha = .05) {
   # Initiate List to be returned --------------------------------------------
 
   return_list <- list()
@@ -71,6 +73,11 @@ check_normality <- function(x, data = "", alpha = .05) {
 
 
   # Find nearest neighbour in normality table -------------------------------
+
+  # Load normality table
+  if (!exists("normality_table")) {
+    load(file = "data/normality_table.rda")
+  }
 
   # Get the performance of tests
   test_performance <- normality_table |>
@@ -241,7 +248,7 @@ check_normality <- function(x, data = "", alpha = .05) {
   # Reporting ---------------------------------------------------------------
 
   # Set report call
-  return_list$report <- paste0("check_normality.report(check_normality(", return_list$param$x_name, ", alpha = ", alpha, "))")
+  return_list$report <- paste0("test_normality.report(test_normality(", return_list$param$x_name, ", alpha = ", alpha, "))")
 
   # If multiple tests were used, declare all
   if (NROW(return_list$test) > 1) {
@@ -298,24 +305,24 @@ check_normality <- function(x, data = "", alpha = .05) {
 }
 
 
-# Reporting class for check_normality ------------------------------------------
+# Reporting class for test_normality ------------------------------------------
 
-#' Class to build a full report for check_normality
+#' Class to build a full report for test_normality
 #'
-#' @param object Object of check_normality function
+#' @param object Object of test_normality function
 #'
 #' @return Returns a full test report with simple figures
 #' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
 #' @export
 #'
 #' @examples
-#' report(check_normality(ToothGrowth$len))
-#' report(check_normality("len", ToothGrowth))
-#' report(check_normality(ToothGrowth[["len"]]))
-#' report(check_normality(runif(233)))
-#' report(check_normality(rnorm(233)))
-#' report(check_normality("ERROR"))
-check_normality.report <- function(object) {
+#' report(test_normality(ToothGrowth$len))
+#' report(test_normality("len", ToothGrowth))
+#' report(test_normality(ToothGrowth[["len"]]))
+#' report(test_normality(runif(233)))
+#' report(test_normality(rnorm(233)))
+#' report(test_normality("ERROR"))
+test_normality.report <- function(object) {
   headline(paste0("Testing ", object$param$x_var_name, " for normality"), 1)
 
   headline(paste0("Descriptive"), 2)

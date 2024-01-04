@@ -10,7 +10,7 @@ reportp(p)
 \item{p}{The p.value.}
 }
 \value{
-Returns the p-value as string (e.g., p < .001)
+Returns the p-value as string (e.g., p < .001).
 }
 \description{
 Formats the p.value for reporting purposes

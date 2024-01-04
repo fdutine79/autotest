@@ -18,5 +18,5 @@ returns a formatted headline.
 Builds a headline (h1 - h4) for reporting
 }
 \examples{
-headline("My Headline", 1)
+headline("Hello World Headline", 1)
 }

@@ -19,8 +19,8 @@ pstars <- function(p, ls = FALSE, ts = FALSE) {
 
   return(
     ifelse(!is.na(p) && !is.null(p) && p < .05,
-           paste0(ls, signif_stars(p, point = NULL), ts),
-           ""
+      paste0(ls, signif_stars(p, point = NULL), ts),
+      ""
     )
   )
 }
@@ -32,7 +32,7 @@ pstars <- function(p, ls = FALSE, ts = FALSE) {
 #'
 #' @param p The p.value.
 #'
-#' @return Returns the p-value as string (e.g., p < .001)
+#' @return Returns the p-value as string (e.g., p < .001).
 #' @export
 #'
 #' @examples
@@ -72,8 +72,8 @@ reportp <- function(p) {
 #' @export
 #'
 #' @examples
-#' report(check_correl2("len", "dose", ToothGrowth, fast = FALSE), elm = "plot")
-#' report(check_normality(rnorm(233), fast = FALSE), elm = "plot")
+#' report(test_correl("len", "dose", ToothGrowth, fast = FALSE), elm = "plot")
+#' report(test_normality(rnorm(233), fast = FALSE), elm = "plot")
 report <- function(x, elm = "report") {
   return(
     invisible(eval(parse(text = x[[elm]])))
@@ -94,7 +94,7 @@ report <- function(x, elm = "report") {
 #' @export
 #'
 #' @examples
-#' headline("My Headline", 1)
+#' headline("Hello World Headline", 1)
 headline <- function(text = FALSE, h = 1) {
   rep <- ifelse(74 - nchar(text) <= 0, 11, 74 - nchar(text))
 
@@ -133,8 +133,8 @@ headline <- function(text = FALSE, h = 1) {
 #' @export
 #'
 #' @examples
-#' print_htest(check_correl2("len", "dose", ToothGrowth)$test)
-#' print_htest(check_ttest2("len", "supp", ToothGrowth)$test)
+#' print_htest(test_correl("len", "dose", ToothGrowth)$test[[1]])
+#' print_htest(test_ttest("len", "supp", ToothGrowth)$test[[1]])
 print_htest <- function(x) {
   coll.string <- paste0("\n", spaces(33))
   alt.string <- x$alternative
@@ -147,9 +147,9 @@ print_htest <- function(x) {
       alt.string <- x$alternative
       if (!is.na(match(alt.string, c("two.sided", "less", "greater")))) {
         alt.string <- switch(alt.string,
-                             two.sided = "not equal to",
-                             less = "less than",
-                             greater = "greater than"
+          two.sided = "not equal to",
+          less = "less than",
+          greater = "greater than"
         )
         alt.string <- paste("True", nnv, "is", alt.string, nv)
       }
@@ -221,4 +221,133 @@ print_htest <- function(x) {
   }
 
   invisible(x)
+}
+
+
+# Function calc_space ---------------------------------------------------
+
+#' Calculates amount of spaces for reporting
+#'
+#' @param x The string for which spaces are calculated.
+#' @param params vector of other strings in table.
+#' @param min The minimum space distance (optional).
+#'
+#' @return Returns an integer of required space.
+#' @export
+#'
+#' @examples
+#' calc_space("This is a test", c("This", "is", "a", "test"), 34)
+#' calc_space("This", c("This is a test", "is", "a", "test"), 34)
+#' calc_space("This", c("This is a test", "is", "a", "test"))
+calc_space <- function(x, params, min = 0) {
+  largest <- min
+  for (i in c(x, params)) {
+    if (nchar(i) > largest) {
+      largest <- nchar(i)
+    }
+  }
+  return(largest - nchar(x))
+}
+
+
+# Function effsize_translate --------------------------------------------
+
+#' Translate an effect size to another
+#'
+#' @description
+#' Transformation is based on psychometrica.
+#' https://www.psychometrica.de/effektstaerke.html#transform
+#' Accepted effect sizes:
+#'
+#' * from c(d, r, eta, f, chi, z)
+#' * to c(d, r, eta, f, chi, z)
+#'
+#' 'from'/'to' chi and z require N
+#'
+#' @param val The current effect size value.
+#' @param from The current effect size.
+#' @param to The desired effect size.
+#' @param N The total number of observations.
+#'
+#' @return Numeric translated effect size.
+#' @export
+#'
+#' @examples
+#' effsize_translate(-0.6761231, "z", "chi", 2044)
+#' effsize_translate(-0.01495496, "r", "f")
+effsize_translate <- function(val, from, to, N = FALSE) {
+  d <- 0.0
+  r <- 0.0
+  eta <- 0.0
+  chi <- 0.0
+  z <- 0.0
+
+  if (from == "d") {
+    d <- val
+    r <- sqrt((d * d) / ((d * d) + 4))
+    tmp <- d / 2
+    eta <- (tmp * tmp) / (1 + (tmp * tmp))
+    f <- d * 0.5
+    chi <- N * r^2
+    z <- r * sqrt(N)
+  } else if (from == "r") {
+    r <- val
+    d <- (2 * r) / sqrt(1 - (r * r))
+    tmp <- d / 2
+    eta <- (tmp * tmp) / (1 + (tmp * tmp))
+    f <- d * 0.5
+    chi <- N * r^2
+    z <- r * sqrt(N)
+  } else if (from == "eta") {
+    eta <- val
+    tmp <- sqrt(eta / (1 - eta))
+    d <- tmp * 2
+    r <- sqrt((d * d) / ((d * d) + 4))
+    f <- d * 0.5
+    chi <- N * r^2
+    z <- r * sqrt(N)
+  } else if (from == "f") {
+    f <- val
+    d <- val * 2
+    r <- sqrt((d * d) / ((d * d) + 4))
+    tmp <- d / 2
+    eta <- (tmp * tmp) / (1 + (tmp * tmp))
+    chi <- N * r^2
+    z <- r * sqrt(N)
+  } else if (from == "chi") {
+    chi <- val
+    r <- sqrt(val / N)
+    d <- (2 * r) / sqrt(1 - (r * r))
+    tmp <- d / 2
+    eta <- (tmp * tmp) / (1 + (tmp * tmp))
+    f <- d * 0.5
+    z <- r * sqrt(N)
+  } else if (from == "z") {
+    z <- val
+    r <- val / sqrt(N)
+    d <- (2 * r) / sqrt(1 - (r * r))
+    tmp <- d / 2
+    eta <- (tmp * tmp) / (1 + (tmp * tmp))
+    f <- d * 0.5
+    chi <- N * r^2
+  }
+
+  return(as.numeric(get(to)))
+}
+
+
+# Function firstup --------------------------------------------------------
+
+#' Capitalize first letter
+#'
+#' @param x String (test).
+#'
+#' @return String (Test).
+#' @export
+#'
+#' @examples
+#' firstup("hello")
+firstup <- function(x) {
+  substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+  return(x)
 }
