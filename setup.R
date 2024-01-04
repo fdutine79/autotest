@@ -5,18 +5,19 @@ devtools::document()
 devtools::install()
 library("autotest")
 
+suppressMessages(library(usethis))
+usethis::use_tidy_style()
 
 #usethis::use_testthat(3)
 devtools::test()
 devtools::check()
 
-suppressMessages(library(usethis))
-usethis::use_tidy_style()
-
 
 ###
 
-library(MASS)
+#normality_table <- normality_table
+#usethis::use_data(normality_table)
+
 
 
 xxx <- test_normality(ToothGrowth$dose)
@@ -27,11 +28,7 @@ xxx <- test_correl(ToothGrowth$dose, ToothGrowth$len)
 xxx$is.significant
 report(xxx)
 
-xxx <- test_correl(ToothGrowth$dose, ToothGrowth$len)
-xxx$is.significant
-report(xxx)
-
-xxx <- test_crosstabs(Cars93$AirBags, Cars93$Man.trans.avail)
+xxx <- test_crosstabs(mtcars$cyl, mtcars$vs)
 xxx$is.significant
 report(xxx)
 

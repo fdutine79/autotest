@@ -16,11 +16,9 @@ Returns a full test report with simple figures.
 Class to build a full report for test_crosstabs
 }
 \examples{
-report(test_crosstabs("AirBags", "Man.trans.avail", Cars93))
-report(test_crosstabs(Cars93$AirBags, Cars93$Man.trans.avail))
-report(test_crosstabs(Cars93[["AirBags"]], Cars93[["Man.trans.avail"]]))
-report(test_crosstabs("Origin", "Man.trans.avail", Cars93, alternative = "less"))
-report(test_crosstabs("Origin", "Man.trans.avail", Cars93, alternative = "greater"))
+report(test_crosstabs("cyl", "vs", mtcars))
+report(test_crosstabs(mtcars$cyl, mtcars$vs))
+report(test_crosstabs(mtcars[["cyl"]], mtcars[["vs"]]))
 }
 \seealso{
 NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)

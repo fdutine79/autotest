@@ -20,11 +20,9 @@
 #' @export
 #'
 #' @examples
-#' test_crosstabs("AirBags", "Man.trans.avail", Cars93)
-#' test_crosstabs(Cars93$AirBags, Cars93$Man.trans.avail)
-#' test_crosstabs(Cars93[["AirBags"]], Cars93[["Man.trans.avail"]])
-#' test_crosstabs("Origin", "Man.trans.avail", Cars93)
-#' test_crosstabs("Origin", "Man.trans.avail", Cars93, alternative = "greater")
+#' test_crosstabs("cyl", "vs", mtcars)
+#' test_crosstabs(mtcars$cyl, mtcars$vs)
+#' test_crosstabs(mtcars[["cyl"]], mtcars[["vs"]])
 test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .05) {
   # Initiate List to be returned -------------------------------------------
 
@@ -47,15 +45,15 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
     } else {
       y_var_name <- gsub("\"", "", gsub(".*\\[([^]]+)\\].*", "\\1", y_name))
     }
-    x <- x
-    y <- y
+    x <- as.character(x)
+    y <- as.character(y)
   } else {
     x_name <- paste0(deparse(substitute(data)), "$", x)
     y_name <- paste0(deparse(substitute(data)), "$", y)
     x_var_name <- x
     y_var_name <- y
-    x <- data[[x]]
-    y <- data[[y]]
+    x <- as.character(data[[x]])
+    y <- as.character(data[[y]])
   }
 
   return_list$param <- append(
@@ -79,7 +77,7 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
   df <- (nrow(tab) - 1) * (ncol(tab) - 1)
   N <- max(NROW(x), NROW(y))
   correct <- ifelse(N < 40, TRUE, FALSE)
-  expected <- chisq.test(tab, correct = correct)$expected
+  expected <- suppressWarnings(chisq.test(tab, correct = correct)$expected)
   difference <- tab - expected
 
   # Force alternative to 'two.sided', if df > 1
@@ -158,13 +156,21 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
         )
       )
     )
+
+    # Run chisq.test for statistics
+    test_chisq <- suppressWarnings(chisq.test(
+      tab,
+      correct = correct
+    ))
+    return_list$test$fisher.test$statistic <- test_chisq$statistic
+    return_list$test$fisher.test$parameter <- test_chisq$parameter
   } else {
     # Pearson's Chi-squared test --------------------------------------------
 
-    test <- chisq.test(
+    test <- suppressWarnings(chisq.test(
       tab,
       correct = correct
-    )
+    ))
 
     # Check for directed hypothesis
     # only for 2x2 matrix (df = 1)
@@ -303,11 +309,9 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
 #' @export
 #'
 #' @examples
-#' report(test_crosstabs("AirBags", "Man.trans.avail", Cars93))
-#' report(test_crosstabs(Cars93$AirBags, Cars93$Man.trans.avail))
-#' report(test_crosstabs(Cars93[["AirBags"]], Cars93[["Man.trans.avail"]]))
-#' report(test_crosstabs("Origin", "Man.trans.avail", Cars93, alternative = "less"))
-#' report(test_crosstabs("Origin", "Man.trans.avail", Cars93, alternative = "greater"))
+#' report(test_crosstabs("cyl", "vs", mtcars))
+#' report(test_crosstabs(mtcars$cyl, mtcars$vs))
+#' report(test_crosstabs(mtcars[["cyl"]], mtcars[["vs"]]))
 test_crosstabs.report <- function(object) {
   headline(paste0("Crosstabs Testing: '", object$param$x_var_name, "', '", object$param$y_var_name, "'"), 1)
 

@@ -126,7 +126,9 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
     # The "G" character declaration (char_decl) is neccessary due to
     # numeric groups (0|1)
 
-    char_decl <- ifelse(is.na(as.numeric(describer$group1[item])) == FALSE, "G", "")
+    char_decl <- suppressWarnings(
+      ifelse(is.na(as.numeric(describer$group1[item])) == FALSE, "G", "")
+    )
     assign(paste0(char_decl, describer$group1[item]), group_metrics)
 
 

@@ -18,6 +18,6 @@ Runs the stringified function.
 Executes a string-saved call
 }
 \examples{
-report(test_correl("len", "dose", ToothGrowth, fast = FALSE), elm = "plot")
-report(test_normality(rnorm(233), fast = FALSE), elm = "plot")
+report(test_correl("len", "dose", ToothGrowth), elm = "plot")
+report(test_normality(rnorm(233)), elm = "plot")
 }

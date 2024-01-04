@@ -24,11 +24,9 @@ Returns a list of all results.
 Perform a crosstabs analysis
 }
 \examples{
-test_crosstabs("AirBags", "Man.trans.avail", Cars93)
-test_crosstabs(Cars93$AirBags, Cars93$Man.trans.avail)
-test_crosstabs(Cars93[["AirBags"]], Cars93[["Man.trans.avail"]])
-test_crosstabs("Origin", "Man.trans.avail", Cars93)
-test_crosstabs("Origin", "Man.trans.avail", Cars93, alternative = "greater")
+test_crosstabs("cyl", "vs", mtcars)
+test_crosstabs(mtcars$cyl, mtcars$vs)
+test_crosstabs(mtcars[["cyl"]], mtcars[["vs"]])
 }
 \seealso{
 NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)

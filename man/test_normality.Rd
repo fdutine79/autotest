@@ -25,7 +25,6 @@ test_normality("len", ToothGrowth)
 test_normality(ToothGrowth[["len"]])
 test_normality(runif(233))
 test_normality(rnorm(233))
-test_normality("ERROR")
 }
 \seealso{
 NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)

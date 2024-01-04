@@ -72,8 +72,8 @@ reportp <- function(p) {
 #' @export
 #'
 #' @examples
-#' report(test_correl("len", "dose", ToothGrowth, fast = FALSE), elm = "plot")
-#' report(test_normality(rnorm(233), fast = FALSE), elm = "plot")
+#' report(test_correl("len", "dose", ToothGrowth), elm = "plot")
+#' report(test_normality(rnorm(233)), elm = "plot")
 report <- function(x, elm = "report") {
   return(
     invisible(eval(parse(text = x[[elm]])))

@@ -24,7 +24,6 @@
 #' test_normality(ToothGrowth[["len"]])
 #' test_normality(runif(233))
 #' test_normality(rnorm(233))
-#' test_normality("ERROR")
 test_normality <- function(x, data = "", alpha = .05) {
   # Initiate List to be returned --------------------------------------------
 
@@ -73,11 +72,6 @@ test_normality <- function(x, data = "", alpha = .05) {
 
 
   # Find nearest neighbour in normality table -------------------------------
-
-  # Load normality table
-  if (!exists("normality_table")) {
-    load(file = "data/normality_table.rda")
-  }
 
   # Get the performance of tests
   test_performance <- normality_table |>
@@ -321,7 +315,6 @@ test_normality <- function(x, data = "", alpha = .05) {
 #' report(test_normality(ToothGrowth[["len"]]))
 #' report(test_normality(runif(233)))
 #' report(test_normality(rnorm(233)))
-#' report(test_normality("ERROR"))
 test_normality.report <- function(object) {
   headline(paste0("Testing ", object$param$x_var_name, " for normality"), 1)
 
