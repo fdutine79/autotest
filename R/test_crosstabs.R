@@ -127,23 +127,12 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
 
     test <- fisher.test(
       tab,
+      alternative = alternative,
       hybrid = ifelse(df > 1, TRUE, FALSE),
+      conf.int = TRUE,
       conf.level = 1 - alpha,
       simulate.p.value = TRUE
     )
-
-    # Check for directed hypothesis
-    # only for 2x2 matrix (df = 1)
-    if (alternative != "two.sided" && df == 1) {
-      if (
-        (alternative == "greater" && difference[1] > difference[3]) ||
-          (alternative == "less" && difference[1] < difference[3])
-      ) {
-        test$p.value <- test$p.value / 2
-      } else {
-        test$p.value <- pmin(1 - (test$p.value / 2), 1)
-      }
-    }
 
     # Update test
     return_list$test <- append(
@@ -275,7 +264,7 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
           ", CCcorr = ", format(round(as.numeric(return_list$test[[1]]$estimate$cc.corr), 2), nsmall = 2),
           " (", return_list$test[[1]]$estimate$magnitude, ")", "\n"
         ),
-        "\n"
+        ifelse(df == 1, paste0("OR = ", return_list$test[[1]]$estimate$`odds ratio`, "\n"), "\n")
       )
     )
 
@@ -334,12 +323,15 @@ test_crosstabs.report <- function(object) {
   headline(paste0(gsub("\\n\t", "", str_trim(object$test[[1]]$method)), " (", object$test[[1]]$method.alt, ")"), 2)
   print_htest(object$test[[1]])
 
-  if (object$test[[1]]$method.alt == "Pearson" && object$test[[1]]$parameter == 1) {
-    headline(paste0("Delta observed/expected frequency"), 2)
-    print(object$descriptive$x_by_y$difference)
-    if (object$is.significant == TRUE) {
+  headline(paste0("Delta observed/expected frequency"), 2)
+  print(object$descriptive$x_by_y$difference)
+  if (object$is.significant == TRUE && object$descriptive$x_by_y$df == 1) {
+    if (object$test[[1]]$method.alt == "Pearson") {
       cat("\n")
       print(object$test[[1]]$estimate$translate$or)
+    } else {
+      cat("\n")
+      print(object$test[[1]]$estimate$`odds ratio`)
     }
   }
 
@@ -356,11 +348,17 @@ test_crosstabs.report <- function(object) {
     ), "\n"
   ))
   cat(paste0("The relationship was ", ifelse(object$is.significant == FALSE, "not ", ""), "significant", ifelse(object$test[[1]]$method.alt == "Pearson" && object$is.significant == TRUE, paste0(" with ", tolower(object$test[[1]]$estimate$magnitude), " effects"), ""), ".\n"))
-  if (object$test[[1]]$method.alt == "Pearson" && object$test[[1]]$parameter == 1 && object$is.significant == TRUE) {
+  if (object$descriptive$x_by_y$df == 1 && object$is.significant == TRUE) {
+    or_from_test <- ifelse(
+      object$test[[1]]$method.alt == "Pearson",
+      format(round(as.numeric(object$test[[1]]$estimate$translate$or$Odds_ratio), 2), nsmall = 2),
+      format(round(as.numeric(object$test[[1]]$estimate$`odds ratio`), 2), nsmall = 2)
+    )
+
     if (object$descriptive$x_by_y$difference[1] > object$descriptive$x_by_y$difference[3]) {
-      cat(paste0(firstup(colnames(as.data.frame(object$descriptive$x_by_y$difference))[2]), " '", names(object$descriptive$x_by_y$difference[1, ][1]), "' for ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[1], " '", names(object$descriptive$x_by_y$difference[, 1][1]), "' is ", format(round(as.numeric(object$test[[1]]$estimate$translate$or$Odds_ratio), 2), nsmall = 2), " times more likely than ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[2], " '", names(object$descriptive$x_by_y$difference[1, ][2]), "' for ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[1], " '", names(object$descriptive$x_by_y$difference[, 1][1]), "'.\n"))
+      cat(paste0(firstup(colnames(as.data.frame(object$descriptive$x_by_y$difference))[2]), " '", names(object$descriptive$x_by_y$difference[1, ][1]), "' for ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[1], " '", names(object$descriptive$x_by_y$difference[, 1][1]), "' is ", or_from_test, " times more likely than ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[2], " '", names(object$descriptive$x_by_y$difference[1, ][2]), "' for ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[1], " '", names(object$descriptive$x_by_y$difference[, 1][1]), "'.\n"))
     } else {
-      cat(paste0(firstup(colnames(as.data.frame(object$descriptive$x_by_y$difference))[2]), " '", names(object$descriptive$x_by_y$difference[1, ][2]), "' for ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[1], " '", names(object$descriptive$x_by_y$difference[, 1][1]), "' is ", format(round(as.numeric(object$test[[1]]$estimate$translate$or$Odds_ratio), 2), nsmall = 2), " times more likely than ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[2], " '", names(object$descriptive$x_by_y$difference[1, ][1]), "' for ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[1], " '", names(object$descriptive$x_by_y$difference[, 1][1]), "'.\n"))
+      cat(paste0(firstup(colnames(as.data.frame(object$descriptive$x_by_y$difference))[2]), " '", names(object$descriptive$x_by_y$difference[1, ][2]), "' for ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[1], " '", names(object$descriptive$x_by_y$difference[, 1][1]), "' is ", or_from_test, " times more likely than ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[2], " '", names(object$descriptive$x_by_y$difference[1, ][1]), "' for ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[1], " '", names(object$descriptive$x_by_y$difference[, 1][1]), "'.\n"))
     }
   }
   cat("\n")
