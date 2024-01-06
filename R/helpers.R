@@ -19,13 +19,12 @@ pstars <- function(p, ls = FALSE, ts = FALSE) {
   ts <- ifelse(ts == TRUE, " ", "")
 
   return(
-    ifelse(!is.na(p) && !is.null(p) && p < .05,
+    ifelse(is.numeric(p) && p < .05,
       paste0(ls, signif_stars(p, point = NULL), ts),
       ""
     )
   )
 }
-
 
 # Function reportp -----------------------------------------------------
 
@@ -43,7 +42,7 @@ pstars <- function(p, ls = FALSE, ts = FALSE) {
 #' reportp(0.01234)
 #' reportp(0.13456)
 reportp <- function(p) {
-  if (is.na(p) || is.null(p)) {
+  if (!is.numeric(p)) {
     p_formatted <- paste0("p = NA")
   } else if (p < .001) {
     p_formatted <- "p < .001"
@@ -246,14 +245,26 @@ print_htest <- function(x) {
 #' calc_space("This is a test", c("This", "is", "a", "test"), 34)
 #' calc_space("This", c("This is a test", "is", "a", "test"), 34)
 #' calc_space("This", c("This is a test", "is", "a", "test"))
-calc_space <- function(x, params, min = 0) {
+calc_space <- function(x, params = NULL, min = 0) {
+  if (is.na(x) || is.null(x)) {
+    x <- ""
+  }
+
   largest <- min
-  for (i in c(x, params)) {
-    if (nchar(i) > largest) {
-      largest <- nchar(i)
+  if (length(params) != 0) {
+    for (i in c(x, params)) {
+      if (nchar(i) > largest) {
+        largest <- nchar(i)
+      }
     }
   }
-  return(largest - nchar(x))
+  result <- largest - nchar(x)
+
+  if (result < 0) {
+    result <- 0
+  }
+
+  return(result)
 }
 
 
@@ -357,6 +368,7 @@ effsize_translate <- function(val, from, to, N = FALSE) {
 #' @examples
 #' firstup("hello")
 firstup <- function(x) {
+  x <- toString(x)
   substr(x, 1, 1) <- toupper(substr(x, 1, 1))
   return(x)
 }

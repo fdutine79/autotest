@@ -4,7 +4,7 @@
 \alias{calc_space}
 \title{Calculates amount of spaces for reporting}
 \usage{
-calc_space(x, params, min = 0)
+calc_space(x, params = NULL, min = 0)
 }
 \arguments{
 \item{x}{The string for which spaces are calculated.}
