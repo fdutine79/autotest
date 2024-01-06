@@ -22,6 +22,3 @@ Print stars of p-value
 \examples{
 pstars(.005)
 }
-\seealso{
-NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
-}

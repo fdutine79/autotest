@@ -7,8 +7,9 @@
 #' @param ts Trailing space: adds space after stars.
 #'
 #' @return String.
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
+#'
 #' @importFrom GGally signif_stars
+#'
 #' @export
 #'
 #' @examples
@@ -33,6 +34,7 @@ pstars <- function(p, ls = FALSE, ts = FALSE) {
 #' @param p The p.value.
 #'
 #' @return Returns the p-value as string (e.g., p < .001).
+#'
 #' @export
 #'
 #' @examples
@@ -69,6 +71,7 @@ reportp <- function(p) {
 #' @param elm List element with stringified call to be executed.
 #'
 #' @return Runs the stringified function.
+#'
 #' @export
 #'
 #' @examples
@@ -89,8 +92,10 @@ report <- function(x, elm = "report") {
 #' @param h The type/hierarchy of headline `c(1:4)`.
 #'
 #' @return returns a formatted headline.
+#'
 #' @importFrom crayon blue bold
 #' @importFrom Hmisc ceil
+#'
 #' @export
 #'
 #' @examples
@@ -127,9 +132,10 @@ headline <- function(text = FALSE, h = 1) {
 #' @param x The test result formatted as list.
 #'
 #' @return Returns a formatted list.
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
+#'
 #' @importFrom common spaces
 #' @importFrom stringr str_trim
+#'
 #' @export
 #'
 #' @examples
@@ -233,6 +239,7 @@ print_htest <- function(x) {
 #' @param min The minimum space distance (optional).
 #'
 #' @return Returns an integer of required space.
+#'
 #' @export
 #'
 #' @examples
@@ -270,6 +277,7 @@ calc_space <- function(x, params, min = 0) {
 #' @param N The total number of observations.
 #'
 #' @return Numeric translated effect size.
+#'
 #' @export
 #'
 #' @examples
@@ -343,6 +351,7 @@ effsize_translate <- function(val, from, to, N = FALSE) {
 #' @param x String (test).
 #'
 #' @return String (Test).
+#'
 #' @export
 #'
 #' @examples

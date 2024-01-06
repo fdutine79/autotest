@@ -269,7 +269,7 @@ test_correl.report <- function(object) {
   headline(paste0("Descriptive"), 2)
   rownames(object$descriptive$x) <- object$param$x_var_name
   rownames(object$descriptive$y) <- object$param$y_var_name
-  print(as.data.frame(rbind(object$descriptive$x, object$descriptive$y))[c(3:5, 8:9, 11:13)] |>
+  print(as.data.frame(rbind(object$descriptive$x, object$descriptive$y))[c(2:5, 8:9, 11:13)] |>
     mutate_if(is.numeric, round, digits = 2))
 
   headline(paste0("Test Requirements"), 2)

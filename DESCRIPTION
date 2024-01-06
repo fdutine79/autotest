@@ -7,7 +7,6 @@ Authors@R:
 Description: The package contains functions for statistical tests, which
 	automatically choose the correct paths and tests depending on require-
 	ments for parametric and non-parametric tests.
-License: use_gpl_license()
 Encoding: UTF-8
 BugReports: https://github.com/fdutine79/autotest/issues
 Roxygen: list(markdown = TRUE)
@@ -23,15 +22,18 @@ Imports:
 	graphics,
 	grDevices,
 	Hmisc,
+	lawstat,
+	moments,
 	nortest,
+	numbers,
 	psych,
 	RcmdrMisc,
 	readr,
 	scales,
 	stats,
 	stringr,
-	tseries,
 	tidyr,
+	usethis,
 	vcd
 Suggests: 
     testthat (>= 3.0.0)
@@ -39,3 +41,4 @@ Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)
 LazyData: true
+License: GPL (>= 3)

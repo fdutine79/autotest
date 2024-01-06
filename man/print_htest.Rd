@@ -20,6 +20,3 @@ https://rdrr.io/cran/EnvStats/src/R/print.htestEnvStats.R
 print_htest(test_correl("len", "dose", ToothGrowth)$test[[1]])
 print_htest(test_ttest("len", "supp", ToothGrowth)$test[[1]])
 }
-\seealso{
-NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
-}

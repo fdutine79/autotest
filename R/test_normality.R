@@ -3,19 +3,22 @@
 #' @param x A numeric vector of data values.
 #' @param data An optional data frame including `x` column.
 #' @param alpha Maximum accepted p-value for significance tests.
+#' @param alphacc Maximum accepted contingency coefficient for `jc` and `rc`.
 #'
 #' @return Returns a list of all results.
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
+#'
 #' @importFrom common spaces
 #' @importFrom crayon bold green red
 #' @importFrom dplyr filter
 #' @importFrom graphics boxplot hist mtext par
+#' @importFrom lawstat rjb.test
+#' @importFrom moments agostino.test
 #' @importFrom nortest ad.test cvm.test lillie.test pearson.test sf.test
 #' @importFrom psych describe
 #' @importFrom readr read_csv
-#' @importFrom stats na.omit shapiro.test density qqline qqnorm
+#' @importFrom stats na.omit shapiro.test density qqline qqnorm sd
 #' @importFrom stringr str_trim
-#' @importFrom tseries jarque.bera.test
+#'
 #' @export
 #'
 #' @examples
@@ -24,7 +27,7 @@
 #' test_normality(ToothGrowth[["len"]])
 #' test_normality(runif(233))
 #' test_normality(rnorm(233))
-test_normality <- function(x, data = "", alpha = .05) {
+test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Initiate List to be returned --------------------------------------------
 
   return_list <- list()
@@ -76,7 +79,7 @@ test_normality <- function(x, data = "", alpha = .05) {
   # Get the performance of tests
   test_performance <- normality_table |>
     dplyr::filter(
-      n == normality_table$n[
+      normality_table$n == normality_table$n[
         which(
           abs(normality_table$n - length(x)) == min(abs(normality_table$n - length(x)))
         )[1]
@@ -86,60 +89,8 @@ test_normality <- function(x, data = "", alpha = .05) {
 
   # Run normality tests -----------------------------------------------------
 
-  # Lilliefors
-  if (test_performance$win_ll == test_performance$max) {
-    test <- lillie.test(x)
-    return_list$test <- append(return_list$test, list(
-      lillie.test = c(
-        test,
-        p.stars = pstars(test$p.value),
-        method.alt = "ll",
-        is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
-      )
-    ))
-  }
-
-  # Shapiro-Wilk
-  if (test_performance$win_sw == test_performance$max) {
-    test <- shapiro.test(x)
-    return_list$test <- append(return_list$test, list(
-      shapiro.test = c(
-        test,
-        p.stars = pstars(test$p.value),
-        method.alt = "sw",
-        is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
-      )
-    ))
-  }
-
-  # Pearson (adj.)
-  if (test_performance$win_pt == test_performance$max) {
-    test <- pearson.test(x, adjust = TRUE)
-    return_list$test <- append(return_list$test, list(
-      pearson.test.adj = c(
-        test,
-        p.stars = pstars(test$p.value),
-        method.alt = "pt",
-        is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
-      )
-    ))
-  }
-
-  # Pearson
-  if (test_performance$win_pf == test_performance$max) {
-    test <- pearson.test(x, adjust = FALSE)
-    return_list$test <- append(return_list$test, list(
-      pearson.test = c(
-        test,
-        p.stars = pstars(test$p.value),
-        method.alt = "pf",
-        is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
-      )
-    ))
-  }
-
   # Anderson-Darling
-  if (test_performance$win_ad == test_performance$max) {
+  if (test_performance$ad == test_performance$max) {
     test <- ad.test(x)
     return_list$test <- append(return_list$test, list(
       ad.test = c(
@@ -152,7 +103,7 @@ test_normality <- function(x, data = "", alpha = .05) {
   }
 
   # Cramer-von Mises
-  if (test_performance$win_cv == test_performance$max) {
+  if (test_performance$cv == test_performance$max) {
     test <- cvm.test(x)
     return_list$test <- append(return_list$test, list(
       cvm.test = c(
@@ -164,8 +115,133 @@ test_normality <- function(x, data = "", alpha = .05) {
     ))
   }
 
+  # D'Agostino
+  if (test_performance$da == test_performance$max) {
+    test <- agostino.test(x, alternative = "two.sided")
+    return_list$test <- append(return_list$test, list(
+      agostino.test = c(
+        test,
+        p.stars = pstars(test$p.value),
+        method.alt = "da",
+        is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
+      )
+    ))
+  }
+
+  # Jarque–Bera (classic)
+  if (test_performance$jb == test_performance$max) {
+    test <- rjb.test(na.omit(x), option = "JB")
+    return_list$test <- append(return_list$test, list(
+      rjb.test.classic = c(
+        test,
+        p.stars = pstars(test$p.value),
+        method.alt = "jb",
+        is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
+      )
+    ))
+  }
+
+  # Jarque–Bera CC (classic)
+  if (test_performance$jc == test_performance$max) {
+    test <- rjb.test(na.omit(x), option = "JB")
+    coefficient <- as.numeric(sqrt(test$statistic / (NROW(na.omit(x)) + test$statistic)))
+    return_list$test <- append(return_list$test, list(
+      rjb.test.classic.cc = c(
+        test,
+        p.stars = pstars(test$p.value),
+        method.alt = "jc",
+        coefficient = coefficient,
+        is.normal = ifelse(!is.null(coefficient) && coefficient <= .30, TRUE, FALSE)
+      )
+    ))
+  }
+
+  # Kolmogorov-Smirnov
+  if (test_performance$ks == test_performance$max) {
+    test <- ks.test(
+      data, "pnorm",
+      mean = mean(x, na.rm = TRUE),
+      sd = sd(x, na.rm = TRUE)
+    )
+    return_list$test <- append(return_list$test, list(
+      ks.test = c(
+        test,
+        p.stars = pstars(test$p.value),
+        method.alt = "ks",
+        is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
+      )
+    ))
+  }
+
+  # Lilliefors
+  if (test_performance$ll == test_performance$max) {
+    test <- lillie.test(x)
+    return_list$test <- append(return_list$test, list(
+      lillie.test = c(
+        test,
+        p.stars = pstars(test$p.value),
+        method.alt = "ll",
+        is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
+      )
+    ))
+  }
+
+  # Pearson chi-square
+  if (test_performance$pf == test_performance$max) {
+    test <- pearson.test(x, adjust = FALSE)
+    return_list$test <- append(return_list$test, list(
+      pearson.test = c(
+        test,
+        p.stars = pstars(test$p.value),
+        method.alt = "pf",
+        is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
+      )
+    ))
+  }
+
+  # Pearson chi-square (adjusted)
+  if (test_performance$pt == test_performance$max) {
+    test <- pearson.test(x, adjust = TRUE)
+    return_list$test <- append(return_list$test, list(
+      pearson.test.adj = c(
+        test,
+        p.stars = pstars(test$p.value),
+        method.alt = "pt",
+        is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
+      )
+    ))
+  }
+
+  # Jarque–Bera (robust)
+  if (test_performance$rb == test_performance$max) {
+    test <- rjb.test(na.omit(x), option = "RJB")
+    return_list$test <- append(return_list$test, list(
+      rjb.test.robust = c(
+        test,
+        p.stars = pstars(test$p.value),
+        method.alt = "rb",
+        is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
+      )
+    ))
+  }
+
+  # Jarque–Bera CC (robust)
+  if (test_performance$rc == test_performance$max) {
+    test <- rjb.test(na.omit(x), option = "RJB")
+    coefficient <- as.numeric(sqrt(test$statistic / (NROW(na.omit(x)) + test$statistic)))
+    return_list$test <- append(return_list$test, list(
+      rjb.test.robust.cc = c(
+        test,
+        p.stars = pstars(test$p.value),
+        method.alt = "rc",
+        coefficient = coefficient,
+        is.normal = ifelse(!is.null(coefficient) && coefficient <= .30, TRUE, FALSE)
+      )
+    ))
+  }
+
   # Shapiro-Francia
-  if (test_performance$win_sf == test_performance$max) {
+  if (test_performance$sf == test_performance$max) {
     test <- sf.test(x)
     return_list$test <- append(return_list$test, list(
       sf.test = c(
@@ -177,30 +253,15 @@ test_normality <- function(x, data = "", alpha = .05) {
     ))
   }
 
-  # Jarque Bera
-  if (test_performance$win_jb == test_performance$max) {
-    test <- jarque.bera.test(na.omit(x))
+  # Shapiro-Wilk
+  if (test_performance$sw == test_performance$max) {
+    test <- shapiro.test(x)
     return_list$test <- append(return_list$test, list(
-      jarque.bera.test = c(
+      shapiro.test = c(
         test,
         p.stars = pstars(test$p.value),
-        method.alt = "jb",
+        method.alt = "sw",
         is.normal = ifelse(test$p.value >= alpha, TRUE, FALSE)
-      )
-    ))
-  }
-
-  # Jarque Bera (cc)
-  if (test_performance$win_jc == test_performance$max) {
-    test <- jarque.bera.test(na.omit(x))
-    coefficient <- as.numeric(sqrt(test$statistic / (NROW(na.omit(x)) + test$statistic)))
-    return_list$test <- append(return_list$test, list(
-      jarque.bera.test.cc = c(
-        test,
-        p.stars = pstars(test$p.value),
-        method.alt = "jc",
-        coefficient = coefficient,
-        is.normal = ifelse(!is.null(coefficient) && coefficient <= .30, TRUE, FALSE)
       )
     ))
   }
@@ -306,7 +367,7 @@ test_normality <- function(x, data = "", alpha = .05) {
 #' @param object Object of test_normality function
 #'
 #' @return Returns a full test report with simple figures
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
+#'
 #' @export
 #'
 #' @examples
@@ -320,7 +381,7 @@ test_normality.report <- function(object) {
 
   headline(paste0("Descriptive"), 2)
   rownames(object$descriptive$x) <- object$param$x_var_name
-  print(as.data.frame(object$descriptive$x)[c(3:5, 8:9, 11:13)])
+  print(as.data.frame(object$descriptive$x)[c(2:5, 8:9, 11:13)])
 
   headline(paste0("Normality test", if (NROW(names(object$test)) > 1) {
     "s"

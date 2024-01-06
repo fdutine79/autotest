@@ -4,7 +4,7 @@
 \alias{test_normality}
 \title{Performs a check on normality}
 \usage{
-test_normality(x, data = "", alpha = 0.05)
+test_normality(x, data = "", alpha = 0.05, alphacc = 0.3)
 }
 \arguments{
 \item{x}{A numeric vector of data values.}
@@ -12,6 +12,8 @@ test_normality(x, data = "", alpha = 0.05)
 \item{data}{An optional data frame including \code{x} column.}
 
 \item{alpha}{Maximum accepted p-value for significance tests.}
+
+\item{alphacc}{Maximum accepted contingency coefficient for \code{jc} and \code{rc}.}
 }
 \value{
 Returns a list of all results.
@@ -25,7 +27,4 @@ test_normality("len", ToothGrowth)
 test_normality(ToothGrowth[["len"]])
 test_normality(runif(233))
 test_normality(rnorm(233))
-}
-\seealso{
-NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
 }
