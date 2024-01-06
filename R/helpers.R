@@ -165,7 +165,7 @@ print_htest <- function(x) {
   }
 
   cat(paste0("Alternative Hypothesis:", spaces(10), alt.string, "\n"))
-  cat(paste0("Test Name:", spaces(23), str_trim(x$method), " (", x$method.alt, ")\n"))
+  cat(paste0("Test Name:", spaces(23), gsub("\\n\t", "", str_trim(x$method)), " (", x$method.alt, ")\n"))
 
   if (!is.null(x$estimate)) {
     cat("Estimated Parameter(s):", spaces(10), paste(paste(format(names(x$estimate), justify = "left"), format(x$estimate, nsmall = 0), sep = " = "), collapse = coll.string), "\n", sep = "")
