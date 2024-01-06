@@ -156,14 +156,6 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
         )
       )
     )
-
-    # Run chisq.test for statistics
-    test_chisq <- suppressWarnings(chisq.test(
-      tab,
-      correct = correct
-    ))
-    return_list$test$fisher.test$statistic <- test_chisq$statistic
-    return_list$test$fisher.test$parameter <- test_chisq$parameter
   } else {
     # Pearson's Chi-squared test --------------------------------------------
 
@@ -211,52 +203,55 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
       is.significant = ifelse(p < alpha, TRUE, FALSE)
     ))
 
-    # Find Magnitude
-    coeff <- assocstats(tab)$contingency # Contingency Coefficient
-    coeff_max <- sqrt((min(ncol(tab), nrow(tab)) - 1) / min(ncol(tab), nrow(tab))) # Maximum Coefficient
-    coeff_cor <- coeff / coeff_max # Corrected Coefficient
+    # Only for Pearson chisq.test as Fisher has no effect size
+    if (return_list$test[[1]]$method.alt == "Pearson") {
+      # Find Magnitude
+      coeff <- assocstats(tab)$contingency # Contingency Coefficient
+      coeff_max <- sqrt((min(ncol(tab), nrow(tab)) - 1) / min(ncol(tab), nrow(tab))) # Maximum Coefficient
+      coeff_cor <- coeff / coeff_max # Corrected Coefficient
 
-    if (coeff_cor < 0.25) {
-      magnitude <- "Small"
-    } else if (coeff_cor < 0.66) {
-      magnitude <- "Medium"
-    } else {
-      magnitude <- "Large"
-    }
+      if (coeff_cor < 0.25) {
+        magnitude <- "Small"
+      } else if (coeff_cor < 0.66) {
+        magnitude <- "Medium"
+      } else {
+        magnitude <- "Large"
+      }
 
-    # Build translate list
-    translate_list <- list()
-    translate_list <- append(
-      translate_list,
-      list(
-        cc = assocstats(tab)$contingency,
-        phi = assocstats(tab)$phi,
-        v = assocstats(tab)$cramer,
-        w = sqrt(return_list$test[[1]]$statistic / N)
-      )
-    )
-    if (df == 1) {
+      # Build translate list
+      translate_list <- list()
       translate_list <- append(
         translate_list,
         list(
-          or = effectsize::oddsratio(tab, ci = 1 - alpha)
+          cc = assocstats(tab)$contingency,
+          phi = assocstats(tab)$phi,
+          v = assocstats(tab)$cramer,
+          w = sqrt(return_list$test[[1]]$statistic / N)
         )
       )
-    }
-    for (i in c("d", "r", "eta", "f", "chi", "z")) {
-      translate_list[i] <- effsize_translate(return_list$test[[1]]$statistic, "chi", i, N)
-    }
+      if (df == 1) {
+        translate_list <- append(
+          translate_list,
+          list(
+            or = effectsize::oddsratio(tab, ci = 1 - alpha)
+          )
+        )
+      }
+      for (i in c("d", "r", "eta", "f", "chi", "z")) {
+        translate_list[i] <- effsize_translate(return_list$test[[1]]$statistic, "chi", i, N)
+      }
 
-    # Update estimate
-    return_list$test[[1]]$estimate <- append(
-      return_list$test[[1]]$estimate,
-      list(
-        magnitude = magnitude,
-        cc.corr = coeff_cor,
-        translate = translate_list
+      # Update estimate
+      return_list$test[[1]]$estimate <- append(
+        return_list$test[[1]]$estimate,
+        list(
+          magnitude = magnitude,
+          cc.corr = coeff_cor,
+          translate = translate_list
+        )
       )
-    )
-    rm(translate_list, magnitude)
+      rm(translate_list, magnitude)
+    }
 
 
     # Reporting -------------------------------------------------------------
@@ -275,8 +270,13 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
         ""
       ),
       ", ", reportp(p), pstars(p, ls = TRUE),
-      ", CCcorr = ", format(round(as.numeric(return_list$test[[1]]$estimate$cc.corr), 2), nsmall = 2),
-      " (", return_list$test[[1]]$estimate$magnitude, ")", "\n"
+      ifelse(return_list$test[[1]]$method.alt == "Pearson",
+        paste0(
+          ", CCcorr = ", format(round(as.numeric(return_list$test[[1]]$estimate$cc.corr), 2), nsmall = 2),
+          " (", return_list$test[[1]]$estimate$magnitude, ")", "\n"
+        ),
+        "\n"
+      )
     )
 
 
@@ -331,10 +331,10 @@ test_crosstabs.report <- function(object) {
     format(round(as.numeric(object$reqs$min.exp), 2), nsmall = 2)
   ), "\n")
 
-  headline(paste0(object$test[[1]]$method, " (", object$test[[1]]$method.alt, ")"), 2)
+  headline(paste0(gsub("\\n\t", "", str_trim(object$test[[1]]$method)), " (", object$test[[1]]$method.alt, ")"), 2)
   print_htest(object$test[[1]])
 
-  if (object$test[[1]]$parameter == 1) {
+  if (object$test[[1]]$method.alt == "Pearson" && object$test[[1]]$parameter == 1) {
     headline(paste0("Delta observed/expected frequency"), 2)
     print(object$descriptive$x_by_y$difference)
     if (object$is.significant == TRUE) {
@@ -355,8 +355,8 @@ test_crosstabs.report <- function(object) {
       )
     ), "\n"
   ))
-  cat(paste0("The relationship was ", ifelse(object$is.significant == FALSE, "not ", ""), "significant", ifelse(object$is.significant == TRUE, paste0(" with ", tolower(object$test[[1]]$estimate$magnitude), " effects"), ""), ".\n"))
-  if (object$test[[1]]$parameter == 1 && object$is.significant == TRUE) {
+  cat(paste0("The relationship was ", ifelse(object$is.significant == FALSE, "not ", ""), "significant", ifelse(object$test[[1]]$method.alt == "Pearson" && object$is.significant == TRUE, paste0(" with ", tolower(object$test[[1]]$estimate$magnitude), " effects"), ""), ".\n"))
+  if (object$test[[1]]$method.alt == "Pearson" && object$test[[1]]$parameter == 1 && object$is.significant == TRUE) {
     if (object$descriptive$x_by_y$difference[1] > object$descriptive$x_by_y$difference[3]) {
       cat(paste0(firstup(colnames(as.data.frame(object$descriptive$x_by_y$difference))[2]), " '", names(object$descriptive$x_by_y$difference[1, ][1]), "' for ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[1], " '", names(object$descriptive$x_by_y$difference[, 1][1]), "' is ", format(round(as.numeric(object$test[[1]]$estimate$translate$or$Odds_ratio), 2), nsmall = 2), " times more likely than ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[2], " '", names(object$descriptive$x_by_y$difference[1, ][2]), "' for ", colnames(as.data.frame(object$descriptive$x_by_y$difference))[1], " '", names(object$descriptive$x_by_y$difference[, 1][1]), "'.\n"))
     } else {
