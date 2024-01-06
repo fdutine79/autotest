@@ -314,7 +314,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
       build_result <- append(
         build_result,
         paste0(
-          ifelse(return_list$is.normal == TRUE,
+          ifelse(i$is.normal == TRUE,
             paste0(spaces(9), green(bold("\u2714"))),
             paste0(spaces(13), red(bold("\u2717")))
           ),
