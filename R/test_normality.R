@@ -159,7 +159,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Kolmogorov-Smirnov
   if (test_performance$ks == test_performance$max) {
     test <- ks.test(
-      data, "pnorm",
+      x, "pnorm",
       mean = mean(x, na.rm = TRUE),
       sd = sd(x, na.rm = TRUE)
     )
