@@ -26,7 +26,7 @@
 #' test_normality("len", ToothGrowth)
 #' test_normality(ToothGrowth[["len"]])
 #' test_normality(runif(233))
-#' test_normality(rnorm(233))
+#' test_normality(rnorm(89))
 test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Initiate List to be returned --------------------------------------------
 
@@ -81,7 +81,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
     dplyr::filter(
       normality_table$n == normality_table$n[
         which(
-          abs(normality_table$n - length(x)) == min(abs(normality_table$n - length(x)))
+          abs(normality_table$n - length(na.omit(x))) == min(abs(normality_table$n - length(na.omit(x))))
         )[1]
       ]
     )
@@ -91,7 +91,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
   # Anderson-Darling
   if (test_performance$ad == test_performance$max) {
-    test <- ad.test(x)
+    test <- ad.test(na.omit(x))
     return_list$test <- append(return_list$test, list(
       ad.test = c(
         test,
@@ -104,7 +104,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
   # Cramer-von Mises
   if (test_performance$cv == test_performance$max) {
-    test <- cvm.test(x)
+    test <- cvm.test(na.omit(x))
     return_list$test <- append(return_list$test, list(
       cvm.test = c(
         test,
@@ -117,7 +117,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
   # D'Agostino
   if (test_performance$da == test_performance$max) {
-    test <- agostino.test(x, alternative = "two.sided")
+    test <- agostino.test(na.omit(x), alternative = "two.sided")
     return_list$test <- append(return_list$test, list(
       agostino.test = c(
         test,
@@ -159,9 +159,9 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Kolmogorov-Smirnov
   if (test_performance$ks == test_performance$max) {
     test <- ks.test(
-      x, "pnorm",
-      mean = mean(x, na.rm = TRUE),
-      sd = sd(x, na.rm = TRUE)
+      na.omit(x), "pnorm",
+      mean = mean(na.omit(x), na.rm = TRUE),
+      sd = sd(na.omit(x), na.rm = TRUE)
     )
     return_list$test <- append(return_list$test, list(
       ks.test = c(
@@ -175,7 +175,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
   # Lilliefors
   if (test_performance$ll == test_performance$max) {
-    test <- lillie.test(x)
+    test <- lillie.test(na.omit(x))
     return_list$test <- append(return_list$test, list(
       lillie.test = c(
         test,
@@ -188,7 +188,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
   # Pearson chi-square
   if (test_performance$pf == test_performance$max) {
-    test <- pearson.test(x, adjust = FALSE)
+    test <- pearson.test(na.omit(x), adjust = FALSE)
     return_list$test <- append(return_list$test, list(
       pearson.test = c(
         test,
@@ -201,7 +201,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
   # Pearson chi-square (adjusted)
   if (test_performance$pt == test_performance$max) {
-    test <- pearson.test(x, adjust = TRUE)
+    test <- pearson.test(na.omit(x), adjust = TRUE)
     return_list$test <- append(return_list$test, list(
       pearson.test.adj = c(
         test,
@@ -242,7 +242,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
   # Shapiro-Francia
   if (test_performance$sf == test_performance$max) {
-    test <- sf.test(x)
+    test <- sf.test(na.omit(x))
     return_list$test <- append(return_list$test, list(
       sf.test = c(
         test,
@@ -255,7 +255,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
   # Shapiro-Wilk
   if (test_performance$sw == test_performance$max) {
-    test <- shapiro.test(x)
+    test <- shapiro.test(na.omit(x))
     return_list$test <- append(return_list$test, list(
       shapiro.test = c(
         test,
@@ -306,7 +306,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   return_list$report <- paste0("test_normality.report(test_normality(", return_list$param$x_name, ", alpha = ", alpha, "))")
 
   # If multiple tests were used, declare all
-  if (NROW(return_list$test) > 1) {
+  if (is_multiple > 1) {
     # Loop through tests
     build_result <- list()
     for (i in return_list$test) {
@@ -318,8 +318,13 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
             paste0(spaces(9), green(bold("\u2714"))),
             paste0(spaces(13), red(bold("\u2717")))
           ),
-          " ", str_trim(i$method), " (", i$method.alt, "), ", names(i$statistic), ifelse(!is.null(i$parameter), paste0("(", i$parameter, ")"), ""),
-          " = ", round(i$statistic, 2), ", ", reportp(i$p.value), pstars(i$p.value, ls = TRUE),
+          " ", str_trim(i$method), " (", i$method.alt, "), ",
+          paste0(
+            names(i$statistic),
+            ifelse(!is.null(i$parameter), paste0("(", i$parameter, ")"), ""),
+            " = ", round(i$statistic, 2),
+            collapse = ", "
+          ), ", ", reportp(i$p.value), pstars(i$p.value, ls = TRUE),
           ifelse(!is.null(i$coefficient), paste0(", CC = ", round(i$coefficient, 2)), ""), "."
         )
       )
@@ -337,8 +342,12 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
     return_list$result <- paste0(
       ifelse(return_list$is.normal == TRUE, green(paste0(bold("\u2714"), " (Normal)")), red(paste0(bold("\u2717"), " (Not normal)"))),
       " ", str_trim(return_list$test[[1]]$method), " (", return_list$test[[1]]$method.alt, "), ",
-      names(return_list$test[[1]]$statistic), ifelse(!is.null(return_list$test[[1]]$parameter), paste0("(", return_list$test[[1]]$parameter, ")"), ""),
-      " = ", round(return_list$test[[1]]$statistic, 2), ", ", reportp(return_list$test[[1]]$p.value), pstars(return_list$test[[1]]$p.value, ls = TRUE),
+      paste0(
+        names(return_list$test[[1]]$statistic),
+        ifelse(!is.null(return_list$test[[1]]$parameter), paste0("(", return_list$test[[1]]$parameter, ")"), ""),
+        " = ", round(return_list$test[[1]]$statistic, 2),
+        collapse = ", "
+      ), ", ", reportp(return_list$test[[1]]$p.value), pstars(return_list$test[[1]]$p.value, ls = TRUE),
       ifelse(!is.null(return_list$test[[1]]$coefficient), paste0(", CC = ", round(return_list$test[[1]]$coefficient, 2)), ""), ".\n"
     )
   }
