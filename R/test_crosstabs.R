@@ -251,8 +251,8 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
     )
 
     return_list$result <- paste0(
-      ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)")), red(paste0(bold("\u2717"), " (Not significant)"))),
-      " ", gsub("\\n\t", "", str_trim(return_list$test[[1]]$method)),
+      ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)\t")), red(paste0(bold("\u2717"), " (Not significant)\t"))),
+      gsub("\\n\t", "", str_trim(return_list$test[[1]]$method)),
       " (", return_list$test[[1]]$method.alt, ")",
       ifelse(return_list$test[[1]]$method.alt == "Pearson",
         paste0(", X2(", return_list$test[[1]]$parameter, ") = ", format(round(as.numeric(return_list$test[[1]]$statistic), 2), nsmall = 2)),

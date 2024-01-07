@@ -332,16 +332,16 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
     # Report
     return_list$result <- paste0(
-      ifelse(return_list$is.normal == TRUE, green(paste0(bold("\u2714"), " (Normal)")), red(paste0(bold("\u2717"), " (Not normal)"))),
-      " The distribution is considered ", ifelse(return_list$is.normal == TRUE, "normal", "not normal"), ".\n",
+      ifelse(return_list$is.normal == TRUE, green(paste0(bold("\u2714"), " (Normal)\t")), red(paste0(bold("\u2717"), " (Not normal)\t"))),
+      "The distribution is considered ", ifelse(return_list$is.normal == TRUE, "normal", "not normal"), ".\n",
       paste(build_result, collapse = "\n"), "\n\n"
     )
     rm(build_result)
   } else {
     # Report
     return_list$result <- paste0(
-      ifelse(return_list$is.normal == TRUE, green(paste0(bold("\u2714"), " (Normal)")), red(paste0(bold("\u2717"), " (Not normal)"))),
-      " ", str_trim(return_list$test[[1]]$method), " (", return_list$test[[1]]$method.alt, "), ",
+      ifelse(return_list$is.normal == TRUE, green(paste0(bold("\u2714"), " (Normal)\t")), red(paste0(bold("\u2717"), " (Not normal)\t"))),
+      str_trim(return_list$test[[1]]$method), " (", return_list$test[[1]]$method.alt, "), ",
       paste0(
         names(return_list$test[[1]]$statistic),
         ifelse(!is.null(return_list$test[[1]]$parameter), paste0("(", return_list$test[[1]]$parameter, ")"), ""),

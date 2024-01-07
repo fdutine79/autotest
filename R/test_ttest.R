@@ -242,8 +242,8 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
       )
 
       return_list$result <- paste0(
-        ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)")), red(paste0(bold("\u2717"), " (Not significant)"))),
-        " ", str_trim(return_list$test[[1]]$method),
+        ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)\t")), red(paste0(bold("\u2717"), " (Not significant)\t"))),
+        str_trim(return_list$test[[1]]$method),
         " (", return_list$test[[1]]$method.alt, ")",
         ", ", names(return_list$test[[1]]$statistic), " = ", format(round(return_list$test[[1]]$statistic[[1]], 2), nsmall = 2),
         ", Z = ", format(round(z, 2), nsmall = 2),
@@ -329,8 +329,8 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
       )
 
       return_list$result <- paste0(
-        ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)")), red(paste0(bold("\u2717"), " (Not significant)"))),
-        " ", str_trim(return_list$test[[1]]$method),
+        ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)\t")), red(paste0(bold("\u2717"), " (Not significant)\t"))),
+        str_trim(return_list$test[[1]]$method),
         " (", return_list$test[[1]]$method.alt, ")",
         ", t(", format(round(as.numeric(return_list$test[[1]]$parameter), 2), nsmall = 2), ") = ", format(round(return_list$test[[1]]$statistic[[1]], 2), nsmall = 2),
         ", ", reportp(p), pstars(p, ls = TRUE),

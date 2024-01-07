@@ -213,8 +213,8 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
     )
 
     return_list$result <- paste0(
-      ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)")), red(paste0(bold("\u2717"), " (Not significant)"))),
-      " ", str_trim(return_list$test[[1]]$method),
+      ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)\t")), red(paste0(bold("\u2717"), " (Not significant)\t"))),
+      str_trim(return_list$test[[1]]$method),
       " (", return_list$test[[1]]$method.alt, ")",
       ", r", ifelse(return_list$test[[1]]$method.alt == "Spearman", "_rho",
         ifelse(return_list$test[[1]]$method.alt == "Kendall", "_tau",
