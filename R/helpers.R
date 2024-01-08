@@ -19,7 +19,7 @@ pstars <- function(p, ls = FALSE, ts = FALSE) {
   ts <- ifelse(ts == TRUE, " ", "")
 
   return(
-    ifelse(is.numeric(p) && p < .05,
+    ifelse(is.numeric(p) && !is.na(p) && !is.null(p) && !is.nan(p) && !is.infinite(p) && p < .05,
       paste0(ls, signif_stars(p, point = NULL), ts),
       ""
     )
@@ -42,7 +42,7 @@ pstars <- function(p, ls = FALSE, ts = FALSE) {
 #' reportp(0.01234)
 #' reportp(0.13456)
 reportp <- function(p) {
-  if (!is.numeric(p)) {
+  if (!is.numeric(p) || is.na(p) || is.null(p) || is.nan(p) || is.infinite(p)) {
     p_formatted <- paste0("p = NA")
   } else if (p < .001) {
     p_formatted <- "p < .001"
@@ -246,7 +246,7 @@ print_htest <- function(x) {
 #' calc_space("This", c("This is a test", "is", "a", "test"), 34)
 #' calc_space("This", c("This is a test", "is", "a", "test"))
 calc_space <- function(x, params = NULL, min = 0) {
-  if (is.na(x) || is.null(x)) {
+  if (is.na(x) || is.null(x) || is.nan(x) || is.infinite(x)) {
     x <- ""
   }
 
