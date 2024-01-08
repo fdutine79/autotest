@@ -2,6 +2,7 @@
 
 test_that("p stars are reported correctly", {
   expect_equal(pstars(""), "")
+  expect_equal(pstars(NaN), "")
   expect_equal(pstars(NA), "")
   expect_equal(pstars(NULL), "")
   expect_equal(pstars("a"), "")
@@ -18,6 +19,7 @@ test_that("p stars are reported correctly", {
 
 test_that("The p-value is formatted correctly", {
   expect_equal(reportp(""), "p = NA")
+  expect_equal(reportp(NaN), "p = NA")
   expect_equal(reportp(NA), "p = NA")
   expect_equal(reportp(NULL), "p = NA")
   expect_equal(reportp("a"), "p = NA")
@@ -33,6 +35,7 @@ test_that("The p-value is formatted correctly", {
 
 test_that("Spaces are calculated correctly", {
   expect_equal(calc_space("", min = 10), 10)
+  expect_equal(calc_space(NaN, min = 10), 10)
   expect_equal(calc_space(NA, min = 10), 10)
   expect_equal(calc_space(NULL, params = c("1234")), 4)
   expect_equal(calc_space("123", min = 10), 7)
@@ -47,6 +50,7 @@ test_that("Spaces are calculated correctly", {
 
 test_that("First letter is correctly capitalised", {
   expect_equal(firstup(""), "")
+  expect_equal(firstup(NaN), "NaN")
   expect_equal(firstup(NA), "NA")
   expect_equal(firstup(NULL), "")
   expect_equal(firstup(123), "123")
