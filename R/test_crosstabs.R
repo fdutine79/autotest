@@ -185,7 +185,7 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
   p <- test$p.value
 
   if (is.na(p)) {
-    stop("\n\tp.value is NA. Result cannot be calculated")
+    warning("\n\tp.value is NA. Result cannot be calculated")
   } else {
     # Add is.significant result (bool)
     return_list <- append(return_list, list(

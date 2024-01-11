@@ -49,7 +49,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
     x_var_name <- x
     x <- data[[x]]
   } else {
-    stop("\n\tis.numeric(x) ist nicht TRUE")
+    warning("\n\tis.numeric(x) ist nicht TRUE")
   }
 
   return_list$param <- append(

@@ -58,7 +58,7 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
     x <- data[[x]]
     y <- data[[y]]
   } else {
-    stop(
+    warning(
       paste0(
         "\n\tis.numeric(x) ist nicht TRUE",
         "\n\tis.numeric(y) ist nicht TRUE"
@@ -66,7 +66,7 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
     )
   }
   if (NROW(x) != NROW(y)) {
-    stop("\n\t'x' and 'y' must have the same length")
+    warning("\n\t'x' and 'y' must have the same length")
   }
 
   return_list$param <- append(
@@ -156,7 +156,7 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
   p <- test$p.value
 
   if (is.na(p)) {
-    stop("\n\tp.value is NA. Result cannot be calculated")
+    warning("\n\tp.value is NA. Result cannot be calculated")
   } else {
     # Update test
     return_list$test <- append(

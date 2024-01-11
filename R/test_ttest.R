@@ -58,10 +58,10 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
     x <- data[[x]]
     y <- as.factor(data[[y]])
   } else {
-    stop("\n\tis.numeric(x) ist nicht TRUE")
+    warning("\n\tis.numeric(x) ist nicht TRUE")
   }
   if (NROW(unique(y)) != 2) {
-    stop("\n\tGrouping factor must have exactly 2 levels")
+    warning("\n\tGrouping factor must have exactly 2 levels")
   }
   if (length(unique(x)) == 1) {
     # All 'x' values are identical
@@ -97,7 +97,7 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
   # Check if "paired" is possible -------------------------------------------
 
   if (paired == TRUE && describer$n[1] != describer$n[2]) {
-    stop(
+    warning(
       paste0("\n\tCannot handle 'paired = TRUE'. Lengths of '", describer$group[1], "' and '", describer$group[2], "' must match")
     )
   }
@@ -180,7 +180,7 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
     # Get Effect Size -------------------------------------------------------
 
     if (is.na(p)) {
-      stop("\n\tp.value is NA. Result cannot be calculated")
+      warning("\n\tp.value is NA. Result cannot be calculated")
     } else {
       # Update test
       return_list$test <- append(
@@ -279,7 +279,7 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
     # Get Effect Size -------------------------------------------------------
 
     if (is.na(p)) {
-      stop("\n\tp.value is NA. Result cannot be calculated")
+      warning("\n\tp.value is NA. Result cannot be calculated")
     } else {
       # Update test
       return_list$test <- append(
