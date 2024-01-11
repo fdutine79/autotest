@@ -155,25 +155,30 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
 
   p <- test$p.value
 
-  if (is.na(p)) {
-    warning("\n\tp.value is NA. Result cannot be calculated")
-  } else {
-    # Update test
-    return_list$test <- append(
-      return_list$test,
-      list(
-        cor.test = c(
-          test,
-          p.stars = pstars(p),
-          method.alt = ifelse(requirements_pearson == TRUE, "Pearson", ifelse(requirements_spearman == TRUE, "Spearman", "Kendall"))
-        )
+  # Update test
+  return_list$test <- append(
+    return_list$test,
+    list(
+      cor.test = c(
+        test,
+        p.stars = pstars(p),
+        method.alt = ifelse(requirements_pearson == TRUE, "Pearson", ifelse(requirements_spearman == TRUE, "Spearman", "Kendall"))
       )
     )
+  )
 
-    # Add is.significant result (bool)
-    return_list <- append(return_list, list(
-      is.significant = ifelse(p < alpha, TRUE, FALSE)
-    ))
+  # Add is.significant result (bool)
+  return_list <- append(return_list, list(
+    is.significant = ifelse(p < alpha, TRUE, FALSE)
+  ))
+
+  if (is.na(p)) {
+    warning("\n\tp.value is NA. Result cannot be calculated")
+
+    magnitude <- NA
+    translate_list <- NA
+
+  } else {
 
     # Find Magnitude
     if (abs(test$estimate) < .1) {
@@ -193,55 +198,55 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
     for (i in c("d", "r", "eta", "f", "chi", "z")) {
       translate_list[i] <- effsize_translate(return_list$test[[1]]$estimate[[1]], "r", i, nrow_data)
     }
-
-    # Update estimate
-    return_list$test[[1]]$estimate <- append(
-      return_list$test[[1]]$estimate,
-      list(
-        magnitude = magnitude,
-        translate = translate_list
-      )
-    )
-    rm(translate_list, magnitude)
-
-
-    # Reporting ---------------------------------------------------------------
-
-    # Set report call
-    return_list$report <- paste0(
-      "test_correl.report(test_correl(", return_list$param$x_name, ", ", return_list$param$y_name, ", alternative = '", alternative, "', alpha = ", alpha, "))"
-    )
-
-    return_list$result <- paste0(
-      ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)\t")), red(paste0(bold("\u2717"), " (Not signif.)\t"))),
-      str_trim(return_list$test[[1]]$method),
-      " (", return_list$test[[1]]$method.alt, ")",
-      ", r", ifelse(return_list$test[[1]]$method.alt == "Spearman", "_rho",
-        ifelse(return_list$test[[1]]$method.alt == "Kendall", "_tau",
-          paste0("(", format(round(as.numeric(return_list$test[[1]]$parameter), 2), nsmall = 2), ")")
-        )
-      ), " = ", format(round(as.numeric(return_list$test[[1]]$estimate[[1]]), 2), nsmall = 2),
-      " (", return_list$test[[1]]$estimate$magnitude, ")",
-      ", ", reportp(p), pstars(p, ls = TRUE), "\n"
-    )
-
-
-    # Plot -------------------------------------------------------------------
-
-    plot_data <- tibble(x, y) |> drop_na()
-    return_list$plot <- paste0(
-      "par(mfrow = c(1, 1))
-      plot(c(", paste(plot_data$y, collapse = ","), ") ~ c(", paste(plot_data$x, collapse = ","), "),
-        main = '", return_list$param$x_var_name, ", ", return_list$param$y_var_name, "',
-        xlab = '", return_list$param$x_var_name, "', ylab = '", return_list$param$y_var_name, "'
-      )
-      lines(lowess(c(", paste(plot_data$y, collapse = ","), "), c(", paste(plot_data$x, collapse = ","), ")), col = scales::alpha(rgb(0,0,0), 0.15), lwd = 6, type = 'l', lend = 2)
-      abline(mean(c(", paste(plot_data$y, collapse = ","), ")), 0, lwd = 2, lty = 3)
-      abline(lm(c(", paste(plot_data$y, collapse = ","), ") ~ c(", paste(plot_data$x, collapse = ","), ")), lwd = 2)"
-    )
-
-    return(return_list)
   }
+
+  # Update estimate
+  return_list$test[[1]]$estimate <- append(
+    return_list$test[[1]]$estimate,
+    list(
+      magnitude = magnitude,
+      translate = translate_list
+    )
+  )
+  rm(translate_list, magnitude)
+
+
+  # Reporting ---------------------------------------------------------------
+
+  # Set report call
+  return_list$report <- paste0(
+    "test_correl.report(test_correl(", return_list$param$x_name, ", ", return_list$param$y_name, ", alternative = '", alternative, "', alpha = ", alpha, "))"
+  )
+
+  return_list$result <- paste0(
+    ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)\t")), red(paste0(bold("\u2717"), " (Not signif.)\t"))),
+    str_trim(return_list$test[[1]]$method),
+    " (", return_list$test[[1]]$method.alt, ")",
+    ", r", ifelse(return_list$test[[1]]$method.alt == "Spearman", "_rho",
+      ifelse(return_list$test[[1]]$method.alt == "Kendall", "_tau",
+        paste0("(", format(round(as.numeric(return_list$test[[1]]$parameter), 2), nsmall = 2), ")")
+      )
+    ), " = ", format(round(as.numeric(return_list$test[[1]]$estimate[[1]]), 2), nsmall = 2),
+    " (", return_list$test[[1]]$estimate$magnitude, ")",
+    ", ", reportp(p), pstars(p, ls = TRUE), "\n"
+  )
+
+
+  # Plot -------------------------------------------------------------------
+
+  plot_data <- tibble(x, y) |> drop_na()
+  return_list$plot <- paste0(
+    "par(mfrow = c(1, 1))
+    plot(c(", paste(plot_data$y, collapse = ","), ") ~ c(", paste(plot_data$x, collapse = ","), "),
+      main = '", return_list$param$x_var_name, ", ", return_list$param$y_var_name, "',
+      xlab = '", return_list$param$x_var_name, "', ylab = '", return_list$param$y_var_name, "'
+    )
+    lines(lowess(c(", paste(plot_data$y, collapse = ","), "), c(", paste(plot_data$x, collapse = ","), ")), col = scales::alpha(rgb(0,0,0), 0.15), lwd = 6, type = 'l', lend = 2)
+    abline(mean(c(", paste(plot_data$y, collapse = ","), ")), 0, lwd = 2, lty = 3)
+    abline(lm(c(", paste(plot_data$y, collapse = ","), ") ~ c(", paste(plot_data$x, collapse = ","), ")), lwd = 2)"
+  )
+
+  return(return_list)
 }
 
 
