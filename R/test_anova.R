@@ -1,6 +1,7 @@
 # Function test_anova --------------------------------------------------
 
 var <- test_anova("Sepal.Length", "Species", iris)
+cat(var$result)
 test_anova <- function(x, y, data = "", alpha = .05) {
   # Initiate List to be returned -------------------------------------------
 
@@ -187,7 +188,7 @@ test_anova <- function(x, y, data = "", alpha = .05) {
 
       # Set report call
       return_list$report <- paste0(
-        "test_ttest.report(test_anova(", return_list$param$x_name, ", ", return_list$param$y_name, ", alpha = ", alpha, "))"
+        "test_anova.report(test_anova(", return_list$param$x_name, ", ", return_list$param$y_name, ", alpha = ", alpha, "))"
       )
 
       return_list$result <- paste0(
@@ -241,7 +242,9 @@ test_anova <- function(x, y, data = "", alpha = .05) {
             summary = test_aov_summary,
             oneway.test = ifelse(return_list$reqs$variance$is.homo == FALSE, list(test_oneway), ""),
             p.stars = pstars(p),
-            method.alt = ifelse(return_list$reqs$variance$is.homo == FALSE, "Welch-Test", "ANOVA")
+            method = ifelse(return_list$reqs$variance$is.homo == FALSE, test_oneway$method, "AOV"),
+            method.alt = ifelse(return_list$reqs$variance$is.homo == FALSE, "Welch-Test", "ANOVA"),
+            parameter = ifelse(return_list$reqs$variance$is.homo == FALSE, c(test_oneway$parameter$`num df`, test_oneway$parameter$`denom df`), c(test_aov_summary$Df))
           )
         )
       )
@@ -283,24 +286,27 @@ test_anova <- function(x, y, data = "", alpha = .05) {
       )
       rm(translate_list, magnitude, effect)
 
+
       # Reporting -----------------------------------------------------------
 
       # Set report call
       return_list$report <- paste0(
-        "test_ttest.report(test_anova(", return_list$param$x_name, ", ", return_list$param$y_name, ", alpha = ", alpha, "))"
+        "test_anova.report(test_anova(", return_list$param$x_name, ", ", return_list$param$y_name, ", alpha = ", alpha, "))"
       )
 
       return_list$result <- paste0(
         ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)\t")), red(paste0(bold("\u2717"), " (Not signif.)\t"))),
         str_trim(return_list$test[[1]]$method),
         " (", return_list$test[[1]]$method.alt, ")",
-        ", t(", format(round(as.numeric(return_list$test[[1]]$parameter), 2), nsmall = 2), ") = ", format(round(return_list$test[[1]]$statistic[[1]], 2), nsmall = 2),
+        ", F(", paste(format(round(as.numeric(return_list$test[[1]]$parameter), 2), nsmall = 2), collapse = ","), ") = ", ifelse(return_list$reqs$variance$is.homo == FALSE, test_oneway$statistic, test_aov_summary$`F value`),
         ", ", reportp(p), pstars(p, ls = TRUE),
-        ", d = ", format(round(as.numeric(d$estimate), 2), nsmall = 2),
-        " (", as.character(d$magnitude[1]), ")\n"
+        ", eta2 = ", format(round(as.numeric(return_list$test[[1]]$estimate$translate$eta), 2), nsmall = 2),
+        " (", as.character(return_list$test[[1]]$estimate$magnitude), ")\n"
       )
     }
   }
+
+  return(return_list)
 
   # Plot -------------------------------------------------------------------
 
@@ -317,24 +323,10 @@ test_anova <- function(x, y, data = "", alpha = .05) {
 }
 
 
-# Reporting class for test_ttest ----------------------------------------
+# Reporting class for test_anova ----------------------------------------
 
-#' Class to build a full report for test_ttest
-#'
-#' @param object Object of test_ttest function
-#'
-#' @return Returns a full test report with simple figures
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
-#' @importFrom common spaces
-#' @importFrom crayon bold green red
-#' @importFrom stringr str_trim
-#' @export
-#'
-#' @examples
-#' report(test_ttest("len", "supp", ToothGrowth))
-#' report(test_ttest(ToothGrowth$len, ToothGrowth$supp))
-#' report(test_ttest(ToothGrowth[["len"]], ToothGrowth[["supp"]]))
-test_ttest.report <- function(object) {
+
+test_anova.report <- function(object) {
   headline(paste0("T-Testing: '", object$param$x_var_name, "', '", object$param$y_var_name, "'"), 1)
 
   headline(paste0("Descriptive"), 2)
