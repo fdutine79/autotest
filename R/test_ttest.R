@@ -20,6 +20,7 @@
 #' @importFrom stats t.test qnorm wilcox.test
 #' @importFrom stringr str_trim
 #' @importFrom tidyr drop_na
+#'
 #' @export
 #'
 #' @examples
