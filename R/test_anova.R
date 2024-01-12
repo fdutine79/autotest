@@ -22,7 +22,7 @@
 #'
 #' @examples
 #' var <- test_anova("Sepal.Length", "Species", iris)
-#' test_anova("weight", "feed", chickwts)
+#' var <- test_anova("weight", "feed", chickwts)
 test_anova <- function(x, y, data = "", alpha = .05) {
   # Initiate List to be returned -------------------------------------------
 
@@ -411,6 +411,7 @@ test_anova <- function(x, y, data = "", alpha = .05) {
 
 # Reporting class for test_anova ----------------------------------------
 report(test_anova("weight", "feed", chickwts))
+report(test_anova("Sepal.Length", "Species", iris))
 
 test_anova.report <- function(object) {
   headline(paste0("ANOVA: '", object$param$x_var_name, "', '", object$param$y_var_name, "'"), 1)
@@ -420,14 +421,47 @@ test_anova.report <- function(object) {
 
   headline(paste0("Test Requirements"), 2)
   for (g in object$descriptive$x_by_y$group1) {
-    cat(paste0("Normality of group ", names(object$reqs$normal[g]), ": ", spaces(calc_space(
-      paste0("Normality of group ", names(object$reqs$normal[g]), ": "), 33
+    cat(paste0("Normality of group ", names(object$reqs$normal[g]), ":\t", spaces(calc_space(
+      paste0("Normality of group ", names(object$reqs$normal[g]), ":\t"),
+      c(), 33
     )), object$reqs$normal[[g]]$result))
     if (!is.null(object$reqs$normal[[g]]$plot)) {
       report(object$reqs$normal[[g]], elm = "plot")
     }
   }
+  for (g in object$descriptive$x_by_y$group1) {
+    cat(paste0("Observations in group ", names(object$reqs$group.size[g]), ":\t", spaces(calc_space(
+      paste0("Observations in group ", names(object$reqs$group.size[g]), ":\t"),
+      c(), 33
+    )), ifelse(object$reqs$group.size[[g]] >= 20, paste0(green(bold("\u2714"), "(n >= 20) ")), paste0(red(bold("\u2717"), "(n < 20) "))),
+    object$reqs$group.size[[g]], "\n"))
+  }
+  if (!is.null(object$reqs$variance)) {
+    cat(paste0("Homogeneous Variances:\t", spaces(calc_space(
+      paste0("Homogeneous Variances:\t"),
+      c(), 33
+    )), paste0(
+      ifelse(object$reqs$variance$is.homo == TRUE, paste0(green(bold("\u2714"), "(Homogeneous) ")), paste0(red(bold("\u2717"), "(Heterogeneous) "))),
+      "Levene Test, F(", object$reqs$variance$Df[1], ", ", object$reqs$variance$Df[2], ") = ", format(round(as.numeric(object$reqs$variance$`F value`[1]), 2), nsmall = 2), ", ",
+      reportp(object$reqs$variance$`Pr(>F)`[1]), pstars(object$reqs$variance$`Pr(>F)`[1], ls = TRUE), "."
+    ), "\n"))
+  }
 
+  headline(paste0(str_trim(object$stats$method), " (", object$stats$method.alt, ")"), 2)
+  print(object$tests$aov$summary)
+  # TODO: print(oneway.test)
+
+  headline("Post-Hoc", 2)
+  print(object$tests$pairwise.t.test$p.value)
+
+  headline("Summary", 2)
+  cat(paste0("A ", object$stats$method.alt, " was computed to assess difference in means between groups "))
+  cat(paste0(object$descriptive$x_by_y$group1, " (M = ", object$descriptive$x_by_y$mean, ", SD = ", object$descriptive$x_by_y$sd, ")", collapse = ", "))
+  cat(".\n")
+  cat(paste0("There was ", ifelse(object$is.significant == TRUE, "a ", "no "), "statistically significant difference between the groups", ifelse(object$is.significant == TRUE, paste0(" with ", tolower(object$stats$estimate$magnitude), " effects"), ""), ".\n\n"))
+  cat(object$result, "\n")
+
+  report(object, elm = "plot")
 
 
 
