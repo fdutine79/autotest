@@ -286,9 +286,30 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
     }
 
     # Add is.normal result (bool)
-    return_list <- append(return_list, list(
-      is.normal = ifelse(loop_true > loop_false, TRUE, FALSE)
-    ))
+    if (loop_true == loop_false) {
+      par(mfrow = c(2, 2))
+      plot(density(x), main = "Density")
+      hist(x, main = "Histogram", xlab = x_var_name)
+      qqnorm(x, main = "Normal Q-Q Plot")
+      qqline(x)
+      boxplot(x, main = "Boxplot", xlab = x_var_name, horizontal = TRUE)
+      mtext("Decision template of normality", side = 3, line = -1.25, font = 2, outer = TRUE)
+
+      prmt <- readline(prompt = cat(paste0(
+        "\nThe tests do not agree, whether the distribution is normal. Please analyse the\n",
+        "distribution manually and decide:\n\n",
+        "1: Normal\n",
+        "2: Not normal"
+      )))
+      return_list <- append(return_list, list(
+        is.normal = ifelse(prmt == 1, TRUE, FALSE)
+      ))
+      rm(prmt)
+    } else {
+      return_list <- append(return_list, list(
+        is.normal = ifelse(loop_true > loop_false, TRUE, FALSE)
+      ))
+    }
 
     rm(loop_false, loop_true)
   } else {
