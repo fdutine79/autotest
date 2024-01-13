@@ -177,9 +177,7 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
 
     magnitude <- NA
     translate_list <- NA
-
   } else {
-
     # Find Magnitude
     if (abs(test$estimate) < .1) {
       magnitude <- "Negligible"

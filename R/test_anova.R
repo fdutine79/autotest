@@ -14,15 +14,16 @@
 #' @importFrom dplyr filter select tibble
 #' @importFrom psych describeBy
 #' @importFrom rstatix eta_squared kruskal_effsize
-#' @importFrom stats kruskal.test oneway.test pairwise.t.test pairwise.wilcox.test
+#' @importFrom stats aov kruskal.test oneway.test pairwise.t.test pairwise.wilcox.test
 #' @importFrom stringr str_trim
 #' @importFrom tidyr drop_na
 #'
 #' @export
 #'
 #' @examples
-#' var <- test_anova("Sepal.Length", "Species", iris)
-#' var <- test_anova("weight", "feed", chickwts)
+#' test_anova("Sepal.Length", "Species", iris)
+#' test_anova("Sepal.Width", "Species", iris)
+#' test_anova("weight", "feed", chickwts)
 test_anova <- function(x, y, data = "", alpha = .05) {
   # Initiate List to be returned -------------------------------------------
 
@@ -149,7 +150,6 @@ test_anova <- function(x, y, data = "", alpha = .05) {
   nrow_data <- NROW(x)
 
   if (requirements_normal == FALSE || requirements_size == FALSE) {
-
     # Kruskal-Wallis ----------------------------------------------------------
 
     test <- kruskal.test(x ~ y)
@@ -255,6 +255,7 @@ test_anova <- function(x, y, data = "", alpha = .05) {
       test_oneway <- oneway.test(x ~ y)
       p <- test_oneway$p.value
     } else {
+      test_oneway <- NULL
       p <- as.numeric(test_aov_summary[[1]]$`Pr(>F)`)[1]
     }
 
@@ -271,7 +272,8 @@ test_anova <- function(x, y, data = "", alpha = .05) {
           aov = c(
             test_aov,
             summary = test_aov_summary
-          )
+          ),
+          oneway.test = test_oneway
         )
       )
 
@@ -410,9 +412,22 @@ test_anova <- function(x, y, data = "", alpha = .05) {
 
 
 # Reporting class for test_anova ----------------------------------------
-report(test_anova("weight", "feed", chickwts))
-report(test_anova("Sepal.Length", "Species", iris))
 
+#' Class to build a full report for test_anova
+#'
+#' @param object Object of test_anova function
+#'
+#' @return Returns a full test report with simple figures
+#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
+#' @importFrom common spaces
+#' @importFrom crayon bold green red
+#' @importFrom stringr str_trim
+#' @export
+#'
+#' @examples
+#' report(test_anova("weight", "feed", chickwts))
+#' report(test_anova("Sepal.Length", "Species", iris))
+#' report(test_anova("Sepal.Width", "Species", iris))
 test_anova.report <- function(object) {
   headline(paste0("ANOVA: '", object$param$x_var_name, "', '", object$param$y_var_name, "'"), 1)
 
@@ -430,11 +445,13 @@ test_anova.report <- function(object) {
     }
   }
   for (g in object$descriptive$x_by_y$group1) {
-    cat(paste0("Observations in group ", names(object$reqs$group.size[g]), ":\t", spaces(calc_space(
-      paste0("Observations in group ", names(object$reqs$group.size[g]), ":\t"),
-      c(), 33
-    )), ifelse(object$reqs$group.size[[g]] >= 20, paste0(green(bold("\u2714"), "(n >= 20) ")), paste0(red(bold("\u2717"), "(n < 20) "))),
-    object$reqs$group.size[[g]], "\n"))
+    cat(paste0(
+      "Observations in group ", names(object$reqs$group.size[g]), ":\t", spaces(calc_space(
+        paste0("Observations in group ", names(object$reqs$group.size[g]), ":\t"),
+        c(), 33
+      )), ifelse(object$reqs$group.size[[g]] >= 20, paste0(green(bold("\u2714"), "(n >= 20) ")), paste0(red(bold("\u2717"), "(n < 20) "))),
+      object$reqs$group.size[[g]], "\n"
+    ))
   }
   if (!is.null(object$reqs$variance)) {
     cat(paste0("Homogeneous Variances:\t", spaces(calc_space(
@@ -448,11 +465,24 @@ test_anova.report <- function(object) {
   }
 
   headline(paste0(str_trim(object$stats$method), " (", object$stats$method.alt, ")"), 2)
-  print(object$tests$aov$summary)
-  # TODO: print(oneway.test)
+  if (!is.null(object$tests$aov$summary)) {
+    print(object$tests$aov$summary)
+    cat("\n")
+  }
+  if (!is.null(object$tests$oneway.test)) {
+    print_htest(object$tests$oneway.test)
+  }
+  if (!is.null(object$tests$kruskal.test)) {
+    print_htest(object$tests$kruskal.test)
+  }
 
   headline("Post-Hoc", 2)
-  print(object$tests$pairwise.t.test$p.value)
+  if (!is.null(object$tests$pairwise.t.test$p.value)) {
+    print(object$tests$pairwise.t.test$p.value)
+  }
+  if (!is.null(object$tests$pairwise.wilcox.test$p.value)) {
+    print(object$tests$pairwise.wilcox.test$p.value)
+  }
 
   headline("Summary", 2)
   cat(paste0("A ", object$stats$method.alt, " was computed to assess difference in means between groups "))
@@ -462,7 +492,4 @@ test_anova.report <- function(object) {
   cat(object$result, "\n")
 
   report(object, elm = "plot")
-
-
-
 }
