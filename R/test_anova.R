@@ -387,7 +387,7 @@ test_anova <- function(x, y, data = "", alpha = .05) {
   )
 
   return_list$result <- paste0(
-    ifelse(p < alpha, green(paste0(bold("\u2713"), " (Significant)\t")), red(paste0(bold("\u2717"), " (Not signif.)\t"))),
+    resultcol(return_list$is.significant, "s"),
     str_trim(return_list$stats$method),
     " (", return_list$stats$method.alt, ")",
     ", ", names(return_list$stats$statistic), "(", str_trim(paste0(unlist(format(round(as.numeric(return_list$stats$parameter[[1]])))), collapse = ", ")), ") = ", format(round(as.numeric(return_list$stats$statistic), 2), nsmall = 2),

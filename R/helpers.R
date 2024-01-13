@@ -372,3 +372,30 @@ firstup <- function(x) {
   substr(x, 1, 1) <- toupper(substr(x, 1, 1))
   return(x)
 }
+
+
+# Function resultcol ------------------------------------------------------
+
+#' Print the indicator of a test in green or red
+#'
+#' @param var The variable to be `TRUE` or `FALSE`.
+#' @param test Shorthand `s`for significance, `n` for normality.
+#'
+#' @return returns a formatted string.
+#'
+#' @importFrom crayon bold green red
+#'
+#' @export
+#'
+#' @examples
+#' cat(resultcol(TRUE, "s"))
+#' cat(resultcol(FALSE, "n"))
+resultcol <- function(var, test) {
+  if (var == TRUE) {
+    result <- green(paste0(bold("\u2714"), " (", ifelse(test == "s", "Significant", "Normal"), ")\t"))
+  } else {
+    result <- red(paste0(bold("\u2717"), " (", ifelse(test == "s", "Not signif.", "Not normal"), ")\t"))
+  }
+
+  return(result)
+}

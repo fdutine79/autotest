@@ -22,7 +22,7 @@ Returns a list of all results.
 Perform an ANOVA
 }
 \examples{
-test_anova("Sepal.Length", "Species", iris)
+var2 <- test_anova("Sepal.Length", "Species", iris)
 test_anova("Sepal.Width", "Species", iris)
 test_anova("weight", "feed", chickwts)
 }

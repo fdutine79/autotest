@@ -22,7 +22,7 @@ Returns a list of all results.
 Performs a check on normality
 }
 \examples{
-test_normality(ToothGrowth$len)
+var <- cat(test_normality(ToothGrowth$len)$result)
 test_normality("len", ToothGrowth)
 test_normality(ToothGrowth[["len"]])
 test_normality(runif(233))

@@ -92,7 +92,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Anderson-Darling
   if (test_performance$ad == test_performance$max) {
     test <- ad.test(na.omit(x))
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       ad.test = c(
         test,
         p.stars = pstars(test$p.value),
@@ -105,7 +105,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Cramer-von Mises
   if (test_performance$cv == test_performance$max) {
     test <- cvm.test(na.omit(x))
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       cvm.test = c(
         test,
         p.stars = pstars(test$p.value),
@@ -118,7 +118,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # D'Agostino
   if (test_performance$da == test_performance$max) {
     test <- agostino.test(na.omit(x), alternative = "two.sided")
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       agostino.test = c(
         test,
         p.stars = pstars(test$p.value),
@@ -131,7 +131,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Jarque–Bera (classic)
   if (test_performance$jb == test_performance$max) {
     test <- rjb.test(na.omit(x), option = "JB")
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       rjb.test.classic = c(
         test,
         p.stars = pstars(test$p.value),
@@ -145,7 +145,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   if (test_performance$jc == test_performance$max) {
     test <- rjb.test(na.omit(x), option = "JB")
     coefficient <- as.numeric(sqrt(test$statistic / (NROW(na.omit(x)) + test$statistic)))
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       rjb.test.classic.cc = c(
         test,
         p.stars = pstars(test$p.value),
@@ -163,7 +163,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
       mean = mean(na.omit(x), na.rm = TRUE),
       sd = sd(na.omit(x), na.rm = TRUE)
     )
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       ks.test = c(
         test,
         p.stars = pstars(test$p.value),
@@ -176,7 +176,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Lilliefors
   if (test_performance$ll == test_performance$max) {
     test <- lillie.test(na.omit(x))
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       lillie.test = c(
         test,
         p.stars = pstars(test$p.value),
@@ -189,7 +189,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Pearson chi-square
   if (test_performance$pf == test_performance$max) {
     test <- pearson.test(na.omit(x), adjust = FALSE)
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       pearson.test = c(
         test,
         p.stars = pstars(test$p.value),
@@ -202,7 +202,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Pearson chi-square (adjusted)
   if (test_performance$pt == test_performance$max) {
     test <- pearson.test(na.omit(x), adjust = TRUE)
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       pearson.test.adj = c(
         test,
         p.stars = pstars(test$p.value),
@@ -215,7 +215,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Jarque–Bera (robust)
   if (test_performance$rb == test_performance$max) {
     test <- rjb.test(na.omit(x), option = "RJB")
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       rjb.test.robust = c(
         test,
         p.stars = pstars(test$p.value),
@@ -229,7 +229,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   if (test_performance$rc == test_performance$max) {
     test <- rjb.test(na.omit(x), option = "RJB")
     coefficient <- as.numeric(sqrt(test$statistic / (NROW(na.omit(x)) + test$statistic)))
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       rjb.test.robust.cc = c(
         test,
         p.stars = pstars(test$p.value),
@@ -243,7 +243,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Shapiro-Francia
   if (test_performance$sf == test_performance$max) {
     test <- sf.test(na.omit(x))
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       sf.test = c(
         test,
         p.stars = pstars(test$p.value),
@@ -256,7 +256,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Shapiro-Wilk
   if (test_performance$sw == test_performance$max) {
     test <- shapiro.test(na.omit(x))
-    return_list$test <- append(return_list$test, list(
+    return_list$tests <- append(return_list$tests, list(
       shapiro.test = c(
         test,
         p.stars = pstars(test$p.value),
@@ -267,7 +267,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   }
 
   # Check if multiple tests were used
-  is_multiple <- NROW(return_list$test)
+  is_multiple <- NROW(return_list$tests)
 
 
   # Check if normality is TRUE or FALSE -------------------------------------
@@ -279,7 +279,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
     loop_true <- 0
 
     # Loop through tests
-    for (i in return_list$test) {
+    for (i in return_list$tests) {
       # Count true/false
       loop_false <- loop_false + ifelse(i$is.normal == FALSE, 1, 0)
       loop_true <- loop_true + ifelse(i$is.normal == TRUE, 1, 0)
@@ -322,7 +322,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   } else {
     # Add is.normal result (bool)
     return_list <- append(return_list, list(
-      is.normal = ifelse(return_list$test[[1]]$is.normal, TRUE, FALSE)
+      is.normal = ifelse(return_list$tests[[1]]$is.normal, TRUE, FALSE)
     ))
   }
   return_list$is.normal <- ifelse(!is.na(return_list$is.normal) && !is.null(return_list$is.normal), return_list$is.normal, FALSE)
@@ -331,13 +331,15 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Reporting ---------------------------------------------------------------
 
   # Set report call
-  return_list$report <- paste0("test_normality.report(test_normality(", return_list$param$x_name, ", alpha = ", alpha, "))")
+  return_list$report <- paste0(
+    "test_normality.report(test_normality(", return_list$param$x_name, ", alpha = ", alpha, "))"
+  )
 
   # If multiple tests were used, declare all
   if (is_multiple > 1) {
     # Loop through tests
     build_result <- list()
-    for (i in return_list$test) {
+    for (i in return_list$tests) {
       # Update result
       build_result <- append(
         build_result,
@@ -360,7 +362,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
     # Report
     return_list$result <- paste0(
-      ifelse(return_list$is.normal == TRUE, green(paste0(bold("\u2714"), " (Normal)\t")), red(paste0(bold("\u2717"), " (Not normal)\t"))),
+      resultcol(return_list$is.normal, "n"),
       "The distribution is considered ", ifelse(return_list$is.normal == TRUE, "normal", "not normal"), ".\n",
       paste(build_result, collapse = "\n"), "\n\n"
     )
@@ -368,15 +370,15 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   } else {
     # Report
     return_list$result <- paste0(
-      ifelse(return_list$is.normal == TRUE, green(paste0(bold("\u2714"), " (Normal)\t")), red(paste0(bold("\u2717"), " (Not normal)\t"))),
-      str_trim(return_list$test[[1]]$method), " (", return_list$test[[1]]$method.alt, "), ",
+      resultcol(return_list$is.normal, "n"),
+      str_trim(return_list$tests[[1]]$method), " (", return_list$tests[[1]]$method.alt, "), ",
       paste0(
-        names(return_list$test[[1]]$statistic),
-        ifelse(!is.null(return_list$test[[1]]$parameter), paste0("(", return_list$test[[1]]$parameter, ")"), ""),
-        " = ", round(return_list$test[[1]]$statistic, 2),
+        names(return_list$tests[[1]]$statistic),
+        ifelse(!is.null(return_list$tests[[1]]$parameter), paste0("(", return_list$tests[[1]]$parameter, ")"), ""),
+        " = ", round(return_list$tests[[1]]$statistic, 2),
         collapse = ", "
-      ), ", ", reportp(return_list$test[[1]]$p.value), pstars(return_list$test[[1]]$p.value, ls = TRUE),
-      ifelse(!is.null(return_list$test[[1]]$coefficient), paste0(", CC = ", round(return_list$test[[1]]$coefficient, 2)), ""), ".\n"
+      ), ", ", reportp(return_list$tests[[1]]$p.value), pstars(return_list$tests[[1]]$p.value, ls = TRUE),
+      ifelse(!is.null(return_list$tests[[1]]$coefficient), paste0(", CC = ", round(return_list$tests[[1]]$coefficient, 2)), ""), ".\n"
     )
   }
 
@@ -420,21 +422,21 @@ test_normality.report <- function(object) {
   rownames(object$descriptive$x) <- object$param$x_var_name
   print(as.data.frame(object$descriptive$x)[c(2:5, 8:9, 11:13)])
 
-  headline(paste0("Normality test", if (NROW(names(object$test)) > 1) {
+  headline(paste0("Normality test", if (NROW(names(object$tests)) > 1) {
     "s"
   }), 2)
-  for (i in names(object$test)) {
-    print_htest(object$test[[i]])
+  for (i in names(object$tests)) {
+    print_htest(object$tests[[i]])
     cat("\n")
   }
 
   headline("Summary", 2)
-  for (i in names(object$test)) {
-    cat(paste0("A ", object$test[[i]]$method, " (", object$test[[i]]$method.alt, ") was performed to assess the distribution of ", object$param$x_var_name, ".\n"))
+  for (i in names(object$tests)) {
+    cat(paste0("A ", object$tests[[i]]$method, " (", object$tests[[i]]$method.alt, ") was performed to assess the distribution of ", object$param$x_var_name, ".\n"))
     cat(paste0(
-      "The test provided evidence that the distribution ", ifelse(object$test[[i]]$is.normal == TRUE, "did not depart ", "departed "), "significantly from normality, ",
-      names(object$test[[i]]$statistic), ifelse(!is.null(object$test[[i]]$parameter), paste0("(", object$test[[i]]$parameter, ")"), ""), " = ", round(object$test[[i]]$statistic, 2), ", ", reportp(object$test[[i]]$p.value),
-      ifelse(!is.null(object$test[[i]]$coefficient), paste0(", CC = ", round(object$test[[i]]$coefficient, 2)), ""), ".\n\n"
+      "The test provided evidence that the distribution ", ifelse(object$tests[[i]]$is.normal == TRUE, "did not depart ", "departed "), "significantly from normality, ",
+      names(object$tests[[i]]$statistic), ifelse(!is.null(object$tests[[i]]$parameter), paste0("(", object$tests[[i]]$parameter, ")"), ""), " = ", round(object$tests[[i]]$statistic, 2), ", ", reportp(object$tests[[i]]$p.value),
+      ifelse(!is.null(object$tests[[i]]$coefficient), paste0(", CC = ", round(object$tests[[i]]$coefficient, 2)), ""), ".\n\n"
     ))
   }
   cat(paste0("The results indicate that the data is ", if (object$is.normal == FALSE) ("not "), "normally distributed.\n\n"))
