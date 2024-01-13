@@ -8,7 +8,7 @@
 #' @return Returns a list of all results.
 #'
 #' @importFrom common spaces
-#' @importFrom crayon bold green red
+#' @importFrom crayon bold green red yellow
 #' @importFrom dplyr filter
 #' @importFrom graphics boxplot hist mtext par
 #' @importFrom lawstat rjb.test
@@ -295,9 +295,16 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
       boxplot(x, main = "Boxplot", xlab = x_var_name, horizontal = TRUE)
       mtext("Decision template of normality", side = 3, line = -1.25, font = 2, outer = TRUE)
 
-      prmt <- readline(prompt = cat(paste0(
+      cat(paste0(yellow(bold("\u26A0"), "(Warning)"), "\tA manual decision is required\n"))
+      cat(paste0(
         "\nThe tests do not agree, whether the distribution is normal. Please analyse the\n",
-        "distribution manually and decide:\n\n",
+        "distribution manually and decide.\n\n"
+      ))
+
+      print(describer)
+
+      prmt <- readline(prompt = cat(paste0(
+        "\n\n",
         "1: Normal\n",
         "2: Not normal"
       )))
