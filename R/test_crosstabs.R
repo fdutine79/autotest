@@ -32,48 +32,24 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
   # Build param list --------------------------------------------------------
 
   # Check conditions and define params
-  if (!is.data.frame(data)) {
-    x_name <- deparse(substitute(x))
-    y_name <- deparse(substitute(y))
-    if (grepl("[$]", x_name) == TRUE) {
-      x_var_name <- gsub(".*[$]", "", x_name)
-    } else {
-      x_var_name <- gsub("\"", "", gsub(".*\\[([^]]+)\\].*", "\\1", x_name))
-    }
-    if (grepl("[$]", y_name) == TRUE) {
-      y_var_name <- gsub(".*[$]", "", y_name)
-    } else {
-      y_var_name <- gsub("\"", "", gsub(".*\\[([^]]+)\\].*", "\\1", y_name))
-    }
-    x <- as.character(x)
-    y <- as.character(y)
-  } else {
-    x_name <- paste0(deparse(substitute(data)), "$", x)
-    y_name <- paste0(deparse(substitute(data)), "$", y)
-    x_var_name <- x
-    y_var_name <- y
-    x <- as.character(data[[x]])
-    y <- as.character(data[[y]])
-  }
+  strctr <- c("factor", "factor")
+  params_list <- force_structure(sys.calls(), strctr)
 
   return_list$param <- append(
-    return_list$param,
+    params_list,
     list(
-      x_name = x_name,
-      y_name = y_name,
-      x_var_name = x_var_name,
-      y_var_name = y_var_name,
-      x = x,
-      y = y,
       alternative = alternative,
       alpha = alpha
     )
   )
 
+  x <- return_list$param$x
+  y <- return_list$param$y
+
 
   # Describe data -----------------------------------------------------------
 
-  tab <- table(x, y, dnn = c(x_var_name, y_var_name))
+  tab <- table(x, y, dnn = c(return_list$param$x_var_name, return_list$param$y_var_name))
   df <- (nrow(tab) - 1) * (ncol(tab) - 1)
   N <- max(NROW(x), NROW(y))
   correct <- ifelse(N < 40, TRUE, FALSE)

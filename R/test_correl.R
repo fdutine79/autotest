@@ -35,53 +35,23 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
   # Build param list --------------------------------------------------------
 
   # Check conditions and define params
-  if (is.numeric(x) && is.numeric(y) && !is.data.frame(data)) {
-    x_name <- deparse(substitute(x))
-    y_name <- deparse(substitute(y))
-    if (grepl("[$]", x_name) == TRUE) {
-      x_var_name <- gsub(".*[$]", "", x_name)
-    } else {
-      x_var_name <- gsub("\"", "", gsub(".*\\[([^]]+)\\].*", "\\1", x_name))
-    }
-    if (grepl("[$]", y_name) == TRUE) {
-      y_var_name <- gsub(".*[$]", "", y_name)
-    } else {
-      y_var_name <- gsub("\"", "", gsub(".*\\[([^]]+)\\].*", "\\1", y_name))
-    }
-    x <- x
-    y <- y
-  } else if (is.character(x) && is.character(y) && is.data.frame(data)) {
-    x_name <- paste0(deparse(substitute(data)), "$", x)
-    y_name <- paste0(deparse(substitute(data)), "$", y)
-    x_var_name <- x
-    y_var_name <- y
-    x <- data[[x]]
-    y <- data[[y]]
-  } else {
-    warning(
-      paste0(
-        "\n\tis.numeric(x) ist nicht TRUE",
-        "\n\tis.numeric(y) ist nicht TRUE"
-      )
-    )
-  }
-  if (NROW(x) != NROW(y)) {
-    warning("\n\t'x' and 'y' must have the same length")
-  }
+  strctr <- c("numeric", "numeric")
+  params_list <- force_structure(sys.calls(), strctr)
 
   return_list$param <- append(
-    return_list$param,
+    params_list,
     list(
-      x_name = x_name,
-      y_name = y_name,
-      x_var_name = x_var_name,
-      y_var_name = y_var_name,
-      x = x,
-      y = y,
       alternative = alternative,
       alpha = alpha
     )
   )
+
+  x <- return_list$param$x
+  y <- return_list$param$y
+
+  if (NROW(x) != NROW(y)) {
+    warning("\n\t'x' and 'y' must have the same length")
+  }
 
 
   # Describe data -----------------------------------------------------------
@@ -104,8 +74,8 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
 
   # Check for normality -----------------------------------------------------
 
-  normal_x <- eval(parse(text = paste0("test_normality(", x_name, ")")))
-  normal_y <- eval(parse(text = paste0("test_normality(", y_name, ")")))
+  normal_x <- eval(parse(text = paste0("test_normality(", return_list$param$x_name, ")")))
+  normal_y <- eval(parse(text = paste0("test_normality(", return_list$param$y_name, ")")))
 
   if (normal_x$is.normal == FALSE || normal_y$is.normal == FALSE) {
     requirements_pearson <- FALSE

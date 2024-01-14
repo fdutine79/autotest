@@ -33,48 +33,23 @@ test_anova <- function(x, y, data = "", alpha = .05) {
   # Build param list --------------------------------------------------------
 
   # Check conditions and define params
-  if (is.numeric(x) && !is.data.frame(data)) {
-    x_name <- deparse(substitute(x))
-    y_name <- deparse(substitute(y))
-    if (grepl("[$]", x_name) == TRUE) {
-      x_var_name <- gsub(".*[$]", "", x_name)
-    } else {
-      x_var_name <- gsub("\"", "", gsub(".*\\[([^]]+)\\].*", "\\1", x_name))
-    }
-    if (grepl("[$]", y_name) == TRUE) {
-      y_var_name <- gsub(".*[$]", "", y_name)
-    } else {
-      y_var_name <- gsub("\"", "", gsub(".*\\[([^]]+)\\].*", "\\1", y_name))
-    }
-    x <- x
-    y <- as.factor(y)
-  } else if (is.character(x) && is.character(y) && is.data.frame(data)) {
-    x_name <- paste0(deparse(substitute(data)), "$", x)
-    y_name <- paste0(deparse(substitute(data)), "$", y)
-    x_var_name <- x
-    y_var_name <- y
-    x <- data[[x]]
-    y <- as.factor(data[[y]])
-  } else {
-    warning("\n\tis.numeric(x) ist nicht TRUE")
-  }
+  strctr <- c("numeric", "factor")
+  params_list <- force_structure(sys.calls(), strctr)
+
+  return_list$param <- append(
+    params_list,
+    list(
+      alpha = alpha
+    )
+  )
+
+  x <- return_list$param$x
+  y <- return_list$param$y
+
   if (length(unique(x)) == 1) {
     # All 'x' values are identical
     return(return_list)
   }
-
-  return_list$param <- append(
-    return_list$param,
-    list(
-      x_name = x_name,
-      y_name = y_name,
-      x_var_name = x_var_name,
-      y_var_name = y_var_name,
-      x = x,
-      y = y,
-      alpha = alpha
-    )
-  )
 
 
   # Describe data -----------------------------------------------------------
@@ -106,19 +81,13 @@ test_anova <- function(x, y, data = "", alpha = .05) {
         dplyr::select(x)
     )))
 
-    # Assign dynamic Variable -----------------------------------------------
-    # The "G" character declaration (char_decl) is neccessary due to
-    # numeric groups (0|1|2)
-
-    char_decl <- suppressWarnings(
-      ifelse(is.na(as.numeric(describer$group1[item])) == FALSE, "G", "")
-    )
-    assign(paste0(char_decl, describer$group1[item]), group_metrics)
+    # Assign GLOBAL dynamic Variable ----------------------------------------
+    assign(describer$group1[item], group_metrics, envir = .GlobalEnv)
 
 
     # Check for normality ---------------------------------------------------
 
-    normal_group <- eval(parse(text = paste0("test_normality(", paste0(char_decl, describer$group1[item]), ")")))
+    normal_group <- eval(parse(text = paste0("test_normality(", describer$group1[item], ")")))
 
     if (describer$n[item] < 2 || normal_group$is.normal == FALSE) {
       requirements_normal <- FALSE
@@ -126,7 +95,7 @@ test_anova <- function(x, y, data = "", alpha = .05) {
     return_list$reqs$normal <- append(
       return_list$reqs$normal,
       eval(parse(text = paste0("list(
-        ", char_decl, describer$group1[item], " = normal_group
+        ", describer$group1[item], " = normal_group
       )")))
     )
 
@@ -139,9 +108,12 @@ test_anova <- function(x, y, data = "", alpha = .05) {
     return_list$reqs$group.size <- append(
       return_list$reqs$group.size,
       eval(parse(text = paste0("list(
-        ", char_decl, describer$group1[item], " = describer$n[item]
+        ", describer$group1[item], " = describer$n[item]
       )")))
     )
+
+    # Remove GLOBAAL variable
+    eval(parse(text = paste0("rm(", describer$group1[item], ", envir = .GlobalEnv)")))
   }
 
 

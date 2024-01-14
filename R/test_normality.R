@@ -25,8 +25,8 @@
 #' test_normality(ToothGrowth$len)
 #' test_normality("len", ToothGrowth)
 #' test_normality(ToothGrowth[["len"]])
+#' test_normality(ToothGrowth["len"])
 #' test_normality(runif(233))
-#' test_normality(rnorm(89))
 test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Initiate List to be returned --------------------------------------------
 
@@ -36,31 +36,18 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
   # Build param list --------------------------------------------------------
 
   # Check conditions and define params
-  if (is.numeric(x)) {
-    x_name <- deparse(substitute(x))
-    if (grepl("[$]", x_name) == TRUE) {
-      x_var_name <- gsub(".*[$]", "", x_name)
-    } else {
-      x_var_name <- gsub("\"", "", gsub(".*\\[([^]]+)\\].*", "\\1", x_name))
-    }
-    x <- x
-  } else if (is.character(x) && is.data.frame(data)) {
-    x_name <- paste0(deparse(substitute(data)), "$", x)
-    x_var_name <- x
-    x <- data[[x]]
-  } else {
-    warning("\n\tis.numeric(x) ist nicht TRUE")
-  }
+  strctr <- c("numeric")
+  params_list <- force_structure(sys.calls(), strctr)
 
   return_list$param <- append(
-    return_list$param,
+    params_list,
     list(
-      x_name = x_name,
-      x_var_name = x_var_name,
-      x = x,
-      alpha = alpha
+      alpha = alpha,
+      alphacc = alphacc
     )
   )
+
+  x <- return_list$param$x
 
 
   # Describe data -----------------------------------------------------------
@@ -289,10 +276,10 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
     if (loop_true == loop_false) {
       par(mfrow = c(2, 2))
       plot(density(x), main = "Density")
-      hist(x, main = "Histogram", xlab = x_var_name)
+      hist(x, main = "Histogram", xlab = return_list$param$x_var_name)
       qqnorm(x, main = "Normal Q-Q Plot")
       qqline(x)
-      boxplot(x, main = "Boxplot", xlab = x_var_name, horizontal = TRUE)
+      boxplot(x, main = "Boxplot", xlab = return_list$param$x_var_name, horizontal = TRUE)
       mtext("Decision template of normality", side = 3, line = -1.25, font = 2, outer = TRUE)
 
       cat(paste0(yellow(bold("\u26A0"), "(Warning)"), "\tA manual decision is required\n"))
@@ -332,7 +319,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
   # Set report call
   return_list$report <- paste0(
-    "test_normality.report(test_normality(", return_list$param$x_name, ", alpha = ", alpha, "))"
+    "test_normality.report(test_normality(", return_list$param$x_name, ", alpha = ", alpha, ", alphacc = ", alphacc, "))"
   )
 
   # If multiple tests were used, declare all
