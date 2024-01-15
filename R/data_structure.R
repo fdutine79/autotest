@@ -213,7 +213,7 @@ build_var <- function(var, strctr, data = FALSE) {
 #' modify_factors(ToothGrowth$supp, "factor")
 modify_factors <- function(var, strctr) {
   if (strctr == "factor") {
-    var <- gsub("[^A-Za-z0-9 ]", ".", var)
+    var <- gsub("[^A-Za-z0-9/s]", ".", var)
     if (TRUE %in% grepl("[0-9]", (substring(unique(var), 1, 1)))) {
       var <- paste0("G.", var)
     }
