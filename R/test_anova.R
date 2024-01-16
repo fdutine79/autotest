@@ -87,7 +87,7 @@ test_anova <- function(x, y, data = "", alpha = .05) {
 
     # Check for normality ---------------------------------------------------
 
-    normal_group <- eval(parse(text = paste0("test_normality(", describer$group1[item], ")")))
+    normal_group <- eval(parse(text = paste0("test_normality(`", describer$group1[item], "`)")))
 
     if (describer$n[item] < 2 || normal_group$is.normal == FALSE) {
       requirements_normal <- FALSE
@@ -95,7 +95,7 @@ test_anova <- function(x, y, data = "", alpha = .05) {
     return_list$reqs$normal <- append(
       return_list$reqs$normal,
       eval(parse(text = paste0("list(
-        ", describer$group1[item], " = normal_group
+        `", describer$group1[item], "` = normal_group
       )")))
     )
 
@@ -108,12 +108,12 @@ test_anova <- function(x, y, data = "", alpha = .05) {
     return_list$reqs$group.size <- append(
       return_list$reqs$group.size,
       eval(parse(text = paste0("list(
-        ", describer$group1[item], " = describer$n[item]
+        `", describer$group1[item], "` = describer$n[item]
       )")))
     )
 
-    # Remove GLOBAAL variable
-    eval(parse(text = paste0("rm(", describer$group1[item], ", envir = .GlobalEnv)")))
+    # Remove GLOBAL variable
+    eval(parse(text = paste0("rm(`", describer$group1[item], "`, envir = .GlobalEnv)")))
   }
 
 
