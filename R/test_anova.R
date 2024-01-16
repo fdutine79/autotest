@@ -168,7 +168,7 @@ test_anova <- function(x, y, data = "", alpha = .05) {
       return_list$tests <- append(
         return_list$tests,
         list(
-          pairwise.wilcox.test = c(
+          posthoc = c(
             posthoc
           )
         )
@@ -293,7 +293,7 @@ test_anova <- function(x, y, data = "", alpha = .05) {
       return_list$tests <- append(
         return_list$tests,
         list(
-          pairwise.t.test = c(
+          posthoc = c(
             posthoc
           )
         )
@@ -449,12 +449,7 @@ test_anova.report <- function(object) {
   }
 
   headline("Post-Hoc", 2)
-  if (!is.null(object$tests$pairwise.t.test$p.value)) {
-    print(object$tests$pairwise.t.test$p.value)
-  }
-  if (!is.null(object$tests$pairwise.wilcox.test$p.value)) {
-    print(object$tests$pairwise.wilcox.test$p.value)
-  }
+  print(object$tests$posthoc$p.value)
 
   headline("Summary", 2)
   cat(paste0("A ", object$stats$method.alt, " was computed to assess difference in means between groups "))

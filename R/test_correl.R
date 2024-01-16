@@ -50,7 +50,7 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
   y <- return_list$param$y
 
   if (NROW(x) != NROW(y)) {
-    warning("\n\t'x' and 'y' must have the same length")
+    warning(paste0("\n\t'x' (n = ", NROW(x), ") and 'y' (n = ", NROW(y), ") must have the same length"))
   }
 
 
@@ -74,8 +74,8 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
 
   # Check for normality -----------------------------------------------------
 
-  normal_x <- eval(parse(text = paste0("test_normality(`", return_list$param$x_name, "`)")))
-  normal_y <- eval(parse(text = paste0("test_normality(`", return_list$param$y_name, "`)")))
+  normal_x <- eval(parse(text = paste0("test_normality(", return_list$param$x_name, ")")))
+  normal_y <- eval(parse(text = paste0("test_normality(", return_list$param$y_name, ")")))
 
   if (normal_x$is.normal == FALSE || normal_y$is.normal == FALSE) {
     requirements_pearson <- FALSE
