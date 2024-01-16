@@ -20,4 +20,5 @@ Print the indicator of a test in green or red
 \examples{
 cat(resultcol(TRUE, "s"))
 cat(resultcol(FALSE, "n"))
+cat(resultcol(NA, "n"))
 }

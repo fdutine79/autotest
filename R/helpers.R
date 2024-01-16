@@ -390,11 +390,16 @@ firstup <- function(x) {
 #' @examples
 #' cat(resultcol(TRUE, "s"))
 #' cat(resultcol(FALSE, "n"))
+#' cat(resultcol(NA, "n"))
 resultcol <- function(var, test) {
-  if (var == TRUE) {
-    result <- green(paste0(bold("\u2714"), " (", ifelse(test == "s", "Significant", "Normal"), ")\t"))
+  if (!is.na(var) && !is.null(var) && !is.nan(var)) {
+    if (var == TRUE) {
+      result <- green(paste0(bold("\u2714"), " (", ifelse(test == "s", "Significant", "Normal"), ")\t"))
+    } else {
+      result <- red(paste0(bold("\u2717"), " (", ifelse(test == "s", "Not signif.", "Not normal"), ")\t"))
+    }
   } else {
-    result <- red(paste0(bold("\u2717"), " (", ifelse(test == "s", "Not signif.", "Not normal"), ")\t"))
+    result <- yellow(paste0(bold("\u26A0"), " (NA)\t"))
   }
 
   return(result)
