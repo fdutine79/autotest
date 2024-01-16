@@ -71,10 +71,6 @@ apply_structure_xy <- function(x, y, data = FALSE, ..., strctr = FALSE) {
     warning("\n\tdata does not correspond to expected")
   }
 
-  # Modify v if required
-  x <- modify_factors(x, strctr[1])
-  y <- modify_factors(y, strctr[2])
-
   # Build params list
   params_list <- list()
   params_list$x_name <- x_name
@@ -121,9 +117,6 @@ apply_structure_x <- function(x, data = FALSE, ..., strctr = FALSE) {
   } else {
     warning("\n\tdata does not correspond to expected")
   }
-
-  # Modify v if required
-  x <- modify_factors(x, strctr[1])
 
   # Build params list
   params_list <- list()
@@ -195,32 +188,6 @@ build_var <- function(var, strctr, data = FALSE) {
     } else if (strctr == "numeric") {
       result <- as.numeric(data[[var]])
     }
-  }
-
-  return(result)
-}
-
-#' Modifies factors which start with numbers or contain special characters
-#'
-#' @param var The `v` from `apply_structure_`-functions.
-#' @param strctr String of required structure.
-#'
-#' @return Return structure-formatted and modified data.
-#' @export
-#'
-#' @examples
-#' modify_factors(esoph$agegp, "factor")
-#' modify_factors(ToothGrowth$supp, "factor")
-modify_factors <- function(var, strctr) {
-  return(var)
-  if (strctr == "factor") {
-    var <- gsub("[^A-Za-z0-9/s]", ".", var)
-    if (TRUE %in% grepl("[0-9]", (substring(unique(var), 1, 1)))) {
-      var <- paste0("G.", var)
-    }
-    result <- as.factor(var)
-  } else {
-    result <- var
   }
 
   return(result)
