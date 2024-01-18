@@ -87,7 +87,9 @@ test_anova <- function(x, y, data = "", alpha = .05) {
 
     # Check for normality ---------------------------------------------------
 
-    normal_group <- eval(parse(text = paste0("test_normality(`", describer$group1[item], "`)")))
+    normal_group <- eval(parse(
+      text = paste0("test_normality(`", describer$group1[item], "`)")
+    ))
 
     if (describer$n[item] < 2 || normal_group$is.normal == FALSE) {
       requirements_normal <- FALSE
@@ -113,7 +115,9 @@ test_anova <- function(x, y, data = "", alpha = .05) {
     )
 
     # Remove GLOBAL variable
-    eval(parse(text = paste0("rm(`", describer$group1[item], "`, envir = .GlobalEnv)")))
+    eval(parse(
+      text = paste0("rm(`", describer$group1[item], "`, envir = .GlobalEnv)")
+    ))
   }
 
 
@@ -190,7 +194,9 @@ test_anova <- function(x, y, data = "", alpha = .05) {
       # Build translate list
       translate_list <- list()
       for (i in c("d", "r", "eta", "f", "chi", "z")) {
-        translate_list[i] <- effsize_translate(effect$effsize, "eta", i, nrow_data)
+        translate_list[i] <- effsize_translate(
+          effect$effsize, "eta", i, nrow_data
+        )
       }
 
       # Update estimate
@@ -334,7 +340,9 @@ test_anova <- function(x, y, data = "", alpha = .05) {
       # Build translate list
       translate_list <- list()
       for (i in c("d", "r", "eta", "f", "chi", "z")) {
-        translate_list[i] <- effsize_translate(as.numeric(effect$Eta2), "eta", i, nrow_data)
+        translate_list[i] <- effsize_translate(
+          as.numeric(effect$Eta2), "eta", i, nrow_data
+        )
       }
 
       # Update estimate
@@ -355,7 +363,11 @@ test_anova <- function(x, y, data = "", alpha = .05) {
 
   # Set report call
   return_list$report <- paste0(
-    "test_anova.report(test_anova(", return_list$param$x_name, ", ", return_list$param$y_name, ", alpha = ", alpha, "))"
+    "test_anova.report(test_anova(",
+    return_list$param$x_name, ", ",
+    return_list$param$y_name, ", ",
+    "alpha = ", alpha,
+    "))"
   )
 
   return_list$result <- paste0(
@@ -390,10 +402,10 @@ test_anova <- function(x, y, data = "", alpha = .05) {
 #' @param object Object of test_anova function
 #'
 #' @return Returns a full test report with simple figures
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
 #' @importFrom common spaces
 #' @importFrom crayon bold green red
 #' @importFrom stringr str_trim
+#'
 #' @export
 #'
 #' @examples

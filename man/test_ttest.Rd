@@ -37,6 +37,3 @@ test_ttest("len", "supp", ToothGrowth)
 test_ttest(ToothGrowth$len, ToothGrowth$supp)
 test_ttest(ToothGrowth[["len"]], ToothGrowth[["supp"]])
 }
-\seealso{
-NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
-}

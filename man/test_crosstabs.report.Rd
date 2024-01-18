@@ -20,6 +20,3 @@ report(test_crosstabs("cyl", "vs", mtcars))
 report(test_crosstabs(mtcars$cyl, mtcars$vs))
 report(test_crosstabs(mtcars[["cyl"]], mtcars[["vs"]]))
 }
-\seealso{
-NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
-}

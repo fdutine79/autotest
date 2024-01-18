@@ -54,7 +54,11 @@ build_normality_table <- function(rounds = 100, fibonacci = 30, alpha = .05, alp
 
   # Set definitions
   start_time <- Sys.time()
-  tests <- c("ad", "cv", "da", "jb", "jc", "ks", "ll", "pf", "pt", "rb", "rc", "sf", "sw")
+  tests <- c(
+    "ad", "cv", "da", "jb",
+    "jc", "ks", "ll", "pf",
+    "pt", "rb", "rc", "sf", "sw"
+  )
   if (fibonacci < 5) {
     fibonacci <- 5
   }
@@ -67,12 +71,20 @@ build_normality_table <- function(rounds = 100, fibonacci = 30, alpha = .05, alp
   # Define list
   normality_table <- data.frame()
   for (s in 1:length(fibo)) {
-    normality_table <- rbind(normality_table, c(fibo[s], rep(0, length(tests) + 1)))
+    normality_table <- rbind(
+      normality_table,
+      c(fibo[s], rep(0, length(tests) + 1))
+    )
   }
   colnames(normality_table) <- c("n", tests, "max")
 
   # Set progress bar
-  progress_bar <- utils::txtProgressBar(min = 0, max = rounds * length(fibo) * length(tests) * test_data_length, style = 3, char = "=")
+  progress_bar <- utils::txtProgressBar(
+    min = 0,
+    max = rounds * length(fibo) * length(tests) * test_data_length,
+    style = 3,
+    char = "="
+  )
 
   for (i in 1:rounds) {
     for (s in 1:length(fibo)) {

@@ -9,7 +9,7 @@
 #' @param alpha Maximum accepted p-value.
 #'
 #' @return Returns a list of all results.
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
+#'
 #' @importFrom crayon bold green red
 #' @importFrom dplyr tibble
 #' @importFrom graphics lines
@@ -19,6 +19,7 @@
 #' @importFrom stats cor.test lowess
 #' @importFrom stringr str_trim
 #' @importFrom tidyr drop_na
+#'
 #' @export
 #'
 #' @examples
@@ -26,7 +27,9 @@
 #' test_correl(ToothGrowth$len, ToothGrowth$dose)
 #' test_correl(ToothGrowth[["len"]], ToothGrowth[["dose"]])
 #' test_correl(rnorm(2330), rnorm(2330))
-test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05) {
+test_correl <- function(
+    x, y, data = "",
+    alternative = "two.sided", alpha = .05) {
   # Initiate List to be returned -------------------------------------------
 
   return_list <- list()
@@ -50,7 +53,11 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
   y <- return_list$param$y
 
   if (NROW(x) != NROW(y)) {
-    warning(paste0("\n\t'x' (n = ", NROW(x), ") and 'y' (n = ", NROW(y), ") must have the same length"))
+    warning(paste0(
+      "\n\t",
+      "'x' (n = ", NROW(x), ") and ",
+      "'y' (n = ", NROW(y), ") must have the same length"
+    ))
   }
 
 
@@ -74,8 +81,12 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
 
   # Check for normality -----------------------------------------------------
 
-  normal_x <- eval(parse(text = paste0("test_normality(", return_list$param$x_name, ")")))
-  normal_y <- eval(parse(text = paste0("test_normality(", return_list$param$y_name, ")")))
+  normal_x <- eval(parse(
+    text = paste0("test_normality(", return_list$param$x_name, ")")
+  ))
+  normal_y <- eval(parse(
+    text = paste0("test_normality(", return_list$param$y_name, ")")
+  ))
 
   if (normal_x$is.normal == FALSE || normal_y$is.normal == FALSE) {
     requirements_pearson <- FALSE
@@ -117,10 +128,24 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
 
   test <- suppressWarnings(cor.test(x, y,
     alternative = alternative,
-    method = ifelse(requirements_pearson == TRUE, "pearson", ifelse(requirements_spearman == TRUE, "spearman", "kendall")),
-    exact = ifelse(requirements_spearman == TRUE || requirements_kendall == TRUE, TRUE, NULL),
+    method = ifelse(requirements_pearson == TRUE,
+      "pearson",
+      ifelse(requirements_spearman == TRUE,
+        "spearman",
+        "kendall"
+      )
+    ),
+    exact = ifelse(
+      requirements_spearman == TRUE || requirements_kendall == TRUE,
+      TRUE,
+      NULL
+    ),
     conf.level = 1 - alpha,
-    continuity = ifelse(requirements_spearman == TRUE || requirements_kendall == TRUE, TRUE, FALSE)
+    continuity = ifelse(
+      requirements_spearman == TRUE || requirements_kendall == TRUE,
+      TRUE,
+      FALSE
+    )
   ))
 
   p <- test$p.value
@@ -132,7 +157,15 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
       cor.test = c(
         test,
         p.stars = pstars(p),
-        method.alt = ifelse(requirements_pearson == TRUE, "Pearson", ifelse(requirements_spearman == TRUE, "Spearman", "Kendall"))
+        method.alt = ifelse(
+          requirements_pearson == TRUE,
+          "Pearson",
+          ifelse(
+            requirements_spearman == TRUE,
+            "Spearman",
+            "Kendall"
+          )
+        )
       )
     )
   )
@@ -164,7 +197,9 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
     # Build translate list
     translate_list <- list()
     for (i in c("d", "r", "eta", "f", "chi", "z")) {
-      translate_list[i] <- effsize_translate(return_list$test[[1]]$estimate[[1]], "r", i, nrow_data)
+      translate_list[i] <- effsize_translate(
+        return_list$test[[1]]$estimate[[1]], "r", i, nrow_data
+      )
     }
   }
 
@@ -183,15 +218,22 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
 
   # Set report call
   return_list$report <- paste0(
-    "test_correl.report(test_correl(", return_list$param$x_name, ", ", return_list$param$y_name, ", alternative = '", alternative, "', alpha = ", alpha, "))"
+    "test_correl.report(test_correl(",
+    return_list$param$x_name, ", ",
+    return_list$param$y_name, ", ",
+    "alternative = '", alternative, "', ",
+    "alpha = ", alpha, "))"
   )
 
   return_list$result <- paste0(
     resultcol(return_list$is.significant, "s"),
     str_trim(return_list$test[[1]]$method),
     " (", return_list$test[[1]]$method.alt, ")",
-    ", r", ifelse(return_list$test[[1]]$method.alt == "Spearman", "_rho",
-      ifelse(return_list$test[[1]]$method.alt == "Kendall", "_tau",
+    ", r", ifelse(
+      return_list$test[[1]]$method.alt == "Spearman",
+      "_rho",
+      ifelse(return_list$test[[1]]$method.alt == "Kendall",
+        "_tau",
         paste0("(", format(round(as.numeric(return_list$test[[1]]$parameter), 2), nsmall = 2), ")")
       )
     ), " = ", format(round(as.numeric(return_list$test[[1]]$estimate[[1]]), 2), nsmall = 2),
@@ -225,7 +267,7 @@ test_correl <- function(x, y, data = "", alternative = "two.sided", alpha = .05)
 #' @param object Object of test_correl function
 #'
 #' @return Returns a full test report with simple figures
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
+#'
 #' @importFrom common spaces
 #' @importFrom crayon bold green red yellow
 #' @importFrom dplyr mutate_if

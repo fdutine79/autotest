@@ -9,7 +9,7 @@
 #' @param alpha Maximum accepted p-value.
 #'
 #' @return Returns a list of all results.
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
+#'
 #' @importFrom crayon bold green red
 #' @importFrom effectsize oddsratio
 #' @importFrom graphics mosaicplot
@@ -17,13 +17,16 @@
 #' @importFrom stats addmargins chisq.test fisher.test
 #' @importFrom stringr str_trim
 #' @importFrom vcd assocstats
+#'
 #' @export
 #'
 #' @examples
 #' test_crosstabs("cyl", "vs", mtcars)
 #' test_crosstabs(mtcars$cyl, mtcars$vs)
 #' test_crosstabs(mtcars[["cyl"]], mtcars[["vs"]])
-test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .05) {
+test_crosstabs <- function(
+    x, y, data = "",
+    alternative = "two.sided", alpha = .05) {
   # Initiate List to be returned -------------------------------------------
 
   return_list <- list()
@@ -49,7 +52,10 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
 
   # Describe data -----------------------------------------------------------
 
-  tab <- table(x, y, dnn = c(return_list$param$x_var_name, return_list$param$y_var_name))
+  tab <- table(x, y, dnn = c(
+    return_list$param$x_var_name,
+    return_list$param$y_var_name
+  ))
   df <- (nrow(tab) - 1) * (ncol(tab) - 1)
   N <- max(NROW(x), NROW(y))
   correct <- ifelse(N < 40, TRUE, FALSE)
@@ -172,7 +178,9 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
     if (return_list$test[[1]]$method.alt == "Pearson") {
       # Find Magnitude
       coeff <- assocstats(tab)$contingency # Contingency Coefficient
-      coeff_max <- sqrt((min(ncol(tab), nrow(tab)) - 1) / min(ncol(tab), nrow(tab))) # Maximum Coefficient
+      coeff_max <- sqrt(
+        (min(ncol(tab), nrow(tab)) - 1) / min(ncol(tab), nrow(tab))
+      ) # Maximum Coefficient
       coeff_cor <- coeff / coeff_max # Corrected Coefficient
 
       if (coeff_cor < 0.25) {
@@ -203,7 +211,9 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
         )
       }
       for (i in c("d", "r", "eta", "f", "chi", "z")) {
-        translate_list[i] <- effsize_translate(return_list$test[[1]]$statistic, "chi", i, N)
+        translate_list[i] <- effsize_translate(
+          return_list$test[[1]]$statistic, "chi", i, N
+        )
       }
 
       # Update estimate
@@ -223,24 +233,35 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
 
     # Set report call
     return_list$report <- paste0(
-      "test_crosstabs.report(test_crosstabs(", return_list$param$x_name, ", ", return_list$param$y_name, ", alternative = '", alternative, "', alpha = ", alpha, "))"
+      "test_crosstabs.report(test_crosstabs(",
+      return_list$param$x_name, ", ",
+      return_list$param$y_name, ", ",
+      "alternative = '", alternative, "', ",
+      "alpha = ", alpha,
+      "))"
     )
 
     return_list$result <- paste0(
       resultcol(return_list$is.significant, "s"),
       gsub("\\n\t", "", str_trim(return_list$test[[1]]$method)),
       " (", return_list$test[[1]]$method.alt, ")",
-      ifelse(return_list$test[[1]]$method.alt == "Pearson",
+      ifelse(
+        return_list$test[[1]]$method.alt == "Pearson",
         paste0(", X2(", return_list$test[[1]]$parameter, ") = ", format(round(as.numeric(return_list$test[[1]]$statistic), 2), nsmall = 2)),
         ""
       ),
       ", ", reportp(p), pstars(p, ls = TRUE),
-      ifelse(return_list$test[[1]]$method.alt == "Pearson",
+      ifelse(
+        return_list$test[[1]]$method.alt == "Pearson",
         paste0(
           ", CCcorr = ", format(round(as.numeric(return_list$test[[1]]$estimate$cc.corr), 2), nsmall = 2),
           " (", return_list$test[[1]]$estimate$magnitude, ")", "\n"
         ),
-        ifelse(df == 1, paste0("OR = ", return_list$test[[1]]$estimate$`odds ratio`, "\n"), "\n")
+        ifelse(
+          df == 1,
+          paste0("OR = ", return_list$test[[1]]$estimate$`odds ratio`, "\n"),
+          "\n"
+        )
       )
     )
 
@@ -268,9 +289,10 @@ test_crosstabs <- function(x, y, data = "", alternative = "two.sided", alpha = .
 #' @param object Object of test_crosstabs function.
 #'
 #' @return Returns a full test report with simple figures.
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
+#'
 #' @importFrom common spaces
 #' @importFrom crayon bold green red
+#'
 #' @export
 #'
 #' @examples

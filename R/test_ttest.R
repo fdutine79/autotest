@@ -10,7 +10,7 @@
 #' @param alpha Maximum accepted p-value.
 #'
 #' @return Returns a list of all results.
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
+#'
 #' @importFrom car leveneTest
 #' @importFrom crayon bold green red
 #' @importFrom dplyr filter select tibble
@@ -27,7 +27,9 @@
 #' test_ttest("len", "supp", ToothGrowth)
 #' test_ttest(ToothGrowth$len, ToothGrowth$supp)
 #' test_ttest(ToothGrowth[["len"]], ToothGrowth[["supp"]])
-test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided", alpha = .05) {
+test_ttest <- function(
+    x, y, data = "",
+    paired = FALSE, alternative = "two.sided", alpha = .05) {
   # Initiate List to be returned --------------------------------------------
 
   return_list <- list()
@@ -74,7 +76,12 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
 
   if (paired == TRUE && describer$n[1] != describer$n[2]) {
     warning(
-      paste0("\n\tCannot handle 'paired = TRUE'. Lengths of '", describer$group[1], "' and '", describer$group[2], "' must match")
+      paste0(
+        "\n\t",
+        "Cannot handle 'paired = TRUE'. Lengths of '",
+        describer$group[1], "' and '",
+        describer$group[2], "' must match"
+      )
     )
   }
 
@@ -104,7 +111,9 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
 
     # Check for normality ---------------------------------------------------
 
-    normal_group <- eval(parse(text = paste0("test_normality(`", describer$group1[item], "`)")))
+    normal_group <- eval(parse(
+      text = paste0("test_normality(`", describer$group1[item], "`)")
+    ))
 
     if (describer$n[item] < 2 || normal_group$is.normal == FALSE) {
       requirements_normal <- FALSE
@@ -130,7 +139,9 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
     )
 
     # Remove GLOBAAL variable
-    eval(parse(text = paste0("rm(`", describer$group1[item], "`, envir = .GlobalEnv)")))
+    eval(parse(
+      text = paste0("rm(`", describer$group1[item], "`, envir = .GlobalEnv)")
+    ))
   }
 
   # Run Tests ---------------------------------------------------------------
@@ -211,7 +222,13 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
 
       # Set report call
       return_list$report <- paste0(
-        "test_ttest.report(test_ttest(", return_list$param$x_name, ", ", return_list$param$y_name, ", paired = ", paired, ", alternative = '", alternative, "', alpha = ", alpha, "))"
+        "test_ttest.report(test_ttest(",
+        return_list$param$x_name, ", ",
+        return_list$param$y_name, ", ",
+        "paired = ", paired, ", ",
+        "alternative = '", alternative, "', ",
+        "alpha = ", alpha,
+        "))"
       )
 
       return_list$result <- paste0(
@@ -261,7 +278,11 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
           t.test = c(
             test,
             p.stars = pstars(p),
-            method.alt = ifelse(return_list$reqs$variance$is.homo == FALSE, "Welch-Test", "T-Test")
+            method.alt = ifelse(
+              return_list$reqs$variance$is.homo == FALSE,
+              "Welch-Test",
+              "T-Test"
+            )
           )
         )
       )
@@ -280,7 +301,9 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
       # Build translate list
       translate_list <- list()
       for (i in c("d", "r", "eta", "f", "chi", "z")) {
-        translate_list[i] <- effsize_translate(as.numeric(d$estimate), "d", i, nrow_data)
+        translate_list[i] <- effsize_translate(
+          as.numeric(d$estimate), "d", i, nrow_data
+        )
       }
 
       # Update estimate
@@ -298,7 +321,13 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
 
       # Set report call
       return_list$report <- paste0(
-        "test_ttest.report(test_ttest(", return_list$param$x_name, ", ", return_list$param$y_name, ", paired = ", paired, ", alternative = '", alternative, "', alpha = ", alpha, "))"
+        "test_ttest.report(test_ttest(",
+        return_list$param$x_name, ", ",
+        return_list$param$y_name, ", ",
+        "paired = ", paired, ", ",
+        "alternative = '", alternative, "', ",
+        "alpha = ", alpha,
+        "))"
       )
 
       return_list$result <- paste0(
@@ -335,10 +364,11 @@ test_ttest <- function(x, y, data = "", paired = FALSE, alternative = "two.sided
 #' @param object Object of test_ttest function
 #'
 #' @return Returns a full test report with simple figures
-#' @seealso NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
+#'
 #' @importFrom common spaces
 #' @importFrom crayon bold green red
 #' @importFrom stringr str_trim
+#'
 #' @export
 #'
 #' @examples

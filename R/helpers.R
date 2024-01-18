@@ -19,7 +19,10 @@ pstars <- function(p, ls = FALSE, ts = FALSE) {
   ts <- ifelse(ts == TRUE, " ", "")
 
   return(
-    ifelse(is.numeric(p) && !is.na(p) && !is.null(p) && !is.nan(p) && !is.infinite(p) && p < .05,
+    ifelse(
+      is.numeric(p) &&
+        !is.na(p) && !is.null(p) && !is.nan(p) && !is.infinite(p) &&
+        p < .05,
       paste0(ls, signif_stars(p, point = NULL), ts),
       ""
     )
@@ -107,13 +110,23 @@ headline <- function(text = FALSE, h = 1) {
   } else if (h == 1) {
     h <- blue(bold(paste0(
       paste(replicate(nchar(text) + rep + 1, "="), collapse = ""), "\n",
-      paste(paste(replicate(floor((rep - 1) / 2), "="), collapse = ""), text, paste(replicate(ceil((rep - 1) / 2), "="), collapse = "")), "\n",
+      paste(
+        paste(replicate(floor((rep - 1) / 2), "="), collapse = ""),
+        text,
+        paste(replicate(ceil((rep - 1) / 2), "="), collapse = "")
+      ), "\n",
       paste(replicate(nchar(text) + rep + 1, "="), collapse = ""), "\n\n"
     )))
   } else if (h == 2) {
-    h <- blue(bold(paste0("\n", paste(text, paste(replicate(rep, "="), collapse = "")), "\n\n")))
+    h <- blue(bold(paste0("\n", paste(
+      text,
+      paste(replicate(rep, "="), collapse = "")
+    ), "\n\n")))
   } else if (h == 3) {
-    h <- blue(bold(paste0("\n", paste(text, paste(replicate(rep, "-"), collapse = "")), "\n\n")))
+    h <- blue(bold(paste0("\n", paste(
+      text,
+      paste(replicate(rep, "-"), collapse = "")
+    ), "\n\n")))
   } else if (h == 4) {
     h <- blue(bold(paste0("\n", text, "\n\n")))
   }
@@ -148,7 +161,10 @@ print_htest <- function(x) {
   if (!is.null(nv)) {
     nnv <- names(nv)
     if ((lnv <- length(nv)) == 1) {
-      cat("Null Hypothesis:", spaces(17), paste(paste(format(nnv, justify = "left"), nv, sep = " = "), collapse = coll.string), "\n", sep = "")
+      cat("Null Hypothesis:", spaces(17), paste(
+        paste(format(nnv, justify = "left"), nv, sep = " = "),
+        collapse = coll.string
+      ), "\n", sep = "")
       alt.string <- x$alternative
       if (!is.na(match(alt.string, c("two.sided", "less", "greater")))) {
         alt.string <- switch(alt.string,
@@ -159,7 +175,13 @@ print_htest <- function(x) {
         alt.string <- paste("True", nnv, "is", alt.string, nv)
       }
     } else {
-      cat("Null Hypothesis:", spaces(17), paste("All", lnv, "values of", nnv[1], "=", nv[1]), "\n", sep = "")
+      cat("Null Hypothesis:", spaces(17), paste(
+        "All", lnv,
+        "values of", nnv[1], "=", nv[1]
+      ),
+      "\n",
+      sep = ""
+      )
     }
   }
 
@@ -394,9 +416,15 @@ firstup <- function(x) {
 resultcol <- function(var, test) {
   if (!is.na(var) && !is.null(var) && !is.nan(var)) {
     if (var == TRUE) {
-      result <- green(paste0(bold("\u2714"), " (", ifelse(test == "s", "Significant", "Normal"), ")\t"))
+      result <- green(paste0(
+        bold("\u2714"),
+        " (", ifelse(test == "s", "Significant", "Normal"), ")\t"
+      ))
     } else {
-      result <- red(paste0(bold("\u2717"), " (", ifelse(test == "s", "Not signif.", "Not normal"), ")\t"))
+      result <- red(paste0(
+        bold("\u2717"),
+        " (", ifelse(test == "s", "Not signif.", "Not normal"), ")\t"
+      ))
     }
   } else {
     result <- yellow(paste0(bold("\u26A0"), " (NA)\t"))

@@ -20,6 +20,3 @@ report(test_anova("weight", "feed", chickwts))
 report(test_anova("Sepal.Length", "Species", iris))
 report(test_anova("Sepal.Width", "Species", iris))
 }
-\seealso{
-NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
-}

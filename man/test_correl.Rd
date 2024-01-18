@@ -29,6 +29,3 @@ test_correl(ToothGrowth$len, ToothGrowth$dose)
 test_correl(ToothGrowth[["len"]], ToothGrowth[["dose"]])
 test_correl(rnorm(2330), rnorm(2330))
 }
-\seealso{
-NCmisc::list.functions.in.file(filename = rstudioapi::getSourceEditorContext()$path)
-}
