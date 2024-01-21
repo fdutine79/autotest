@@ -138,7 +138,7 @@ test_ttest <- function(
       )")))
     )
 
-    # Remove GLOBAAL variable
+    # Remove GLOBAL variable
     eval(parse(
       text = paste0("rm(`", describer$group1[item], "`, envir = .GlobalEnv)")
     ))
