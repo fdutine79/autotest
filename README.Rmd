@@ -31,7 +31,7 @@ loadenv::load_environment(packages)
 
 autotest provides various standard statistical test functions. The correct tests, depending on sample size, normality, homogeneity, and various other parameters are selected automatically. You will be free of running `levene.test()`to get homogeneity and there is no need to analyse every distribution visually for normality (even sometimes you are prompted to do so).
 
-Start with loading autotest or use the [loadenv](https://github.com/fdutine79/loadenv) as described above.
+Start with loading autotest or use the [loadenv](https://github.com/fdutine79/loadenv) package as described above.
 
 ``` r
 library(autotest)
