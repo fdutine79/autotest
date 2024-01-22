@@ -369,8 +369,6 @@ test_ttest <- function(
 #' @importFrom crayon bold green red
 #' @importFrom stringr str_trim
 #'
-#' @export
-#'
 #' @examples
 #' report(test_ttest("len", "supp", ToothGrowth))
 #' report(test_ttest(ToothGrowth$len, ToothGrowth$supp))

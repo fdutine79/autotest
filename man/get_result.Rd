@@ -24,7 +24,3 @@ Integer 0|1.
 Returns 1 if the test has confirmed the expected result.
 Returns 0 if the test did not confirm the expected result.
 }
-\examples{
-get_result("sf", rnorm(233), TRUE)
-get_result("rc", rbeta(233, 10, 2), TRUE)
-}

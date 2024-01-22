@@ -14,7 +14,6 @@
 #' @importFrom utils tail
 #'
 #' @return Returns an evaluated function call.
-#' @export
 force_structure <- function(syscalls, strctr) {
   syscalls <- tail(syscalls, n = 1) # Use last element
 
@@ -41,7 +40,6 @@ force_structure <- function(syscalls, strctr) {
 #' @param ... Other arguments to the function (i.e., paired, alternative, etc.)
 #'
 #' @return Returns a params list
-#' @export
 apply_structure_xy <- function(x, y, data = FALSE, ..., strctr = FALSE) {
   if (!is.data.frame(data)) {
     # v_name
@@ -94,7 +92,6 @@ apply_structure_xy <- function(x, y, data = FALSE, ..., strctr = FALSE) {
 #' @param ... Other arguments to the function (i.e., paired, alternative, etc.)
 #'
 #' @return Returns a params list
-#' @export
 apply_structure_x <- function(x, data = FALSE, ..., strctr = FALSE) {
   if (!is.data.frame(data)) {
     # v_name
@@ -135,12 +132,6 @@ apply_structure_x <- function(x, data = FALSE, ..., strctr = FALSE) {
 #' @param var_name The `v_name` from `apply_structure_`-functions.
 #'
 #' @return Returns a string with the formatted `v_var_name`.
-#' @export
-#'
-#' @examples
-#' build_var_name("ToothGrowth$len")
-#' build_var_name("ToothGrowth[len]")
-#' build_var_name("ToothGrowth[[len]]")
 build_var_name <- function(var_name) {
   if (grepl("[$]", var_name) == TRUE) {
     result <- gsub(".*[$]", "", var_name)
@@ -158,13 +149,6 @@ build_var_name <- function(var_name) {
 #' @param data An optional data frame including the `v` column.
 #'
 #' @return Returns structure-formatted data.
-#' @export
-#'
-#' @examples
-#' build_var(ToothGrowth$len, "numeric")
-#' build_var(ToothGrowth["len"], "numeric")
-#' build_var(ToothGrowth[["len"]], "numeric")
-#' build_var("len", "numeric", ToothGrowth)
 build_var <- function(var, strctr, data = FALSE) {
   if (missing(data)) {
     # For data without data frame

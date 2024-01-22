@@ -436,8 +436,6 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 #'
 #' @return Returns a full test report with simple figures
 #'
-#' @export
-#'
 #' @examples
 #' report(test_normality(ToothGrowth$len))
 #' report(test_normality("len", ToothGrowth))

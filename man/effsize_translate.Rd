@@ -29,7 +29,3 @@ Accepted effect sizes:
 
 'from'/'to' chi and z require N
 }
-\examples{
-effsize_translate(-0.6761231, "z", "chi", 2044)
-effsize_translate(-0.01495496, "r", "f")
-}

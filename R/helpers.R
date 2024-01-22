@@ -9,11 +9,6 @@
 #' @return String.
 #'
 #' @importFrom GGally signif_stars
-#'
-#' @export
-#'
-#' @examples
-#' pstars(.005)
 pstars <- function(p, ls = FALSE, ts = FALSE) {
   ls <- ifelse(ls == TRUE, " ", "")
   ts <- ifelse(ts == TRUE, " ", "")
@@ -36,14 +31,6 @@ pstars <- function(p, ls = FALSE, ts = FALSE) {
 #' @param p The p.value.
 #'
 #' @return Returns the p-value as string (e.g., p < .001).
-#'
-#' @export
-#'
-#' @examples
-#' reportp(0.00012)
-#' reportp(0.00123)
-#' reportp(0.01234)
-#' reportp(0.13456)
 reportp <- function(p) {
   if (!is.numeric(p) || is.na(p) || is.null(p) || is.nan(p) || is.infinite(p)) {
     p_formatted <- paste0("p = NA")
@@ -147,12 +134,6 @@ headline <- function(text = FALSE, h = 1) {
 #'
 #' @importFrom common spaces
 #' @importFrom stringr str_trim
-#'
-#' @export
-#'
-#' @examples
-#' print_htest(test_correl("len", "dose", ToothGrowth)$test[[1]])
-#' print_htest(test_ttest("len", "supp", ToothGrowth)$test[[1]])
 print_htest <- function(x) {
   coll.string <- paste0("\n", spaces(33))
   alt.string <- x$alternative
@@ -260,13 +241,6 @@ print_htest <- function(x) {
 #' @param min The minimum space distance (optional).
 #'
 #' @return Returns an integer of required space.
-#'
-#' @export
-#'
-#' @examples
-#' calc_space("This is a test", c("This", "is", "a", "test"), 34)
-#' calc_space("This", c("This is a test", "is", "a", "test"), 34)
-#' calc_space("This", c("This is a test", "is", "a", "test"))
 calc_space <- function(x, params = NULL, min = 0) {
   if (is.na(x) || is.null(x) || is.nan(x) || is.infinite(x)) {
     x <- ""
@@ -310,12 +284,6 @@ calc_space <- function(x, params = NULL, min = 0) {
 #' @param N The total number of observations.
 #'
 #' @return Numeric translated effect size.
-#'
-#' @export
-#'
-#' @examples
-#' effsize_translate(-0.6761231, "z", "chi", 2044)
-#' effsize_translate(-0.01495496, "r", "f")
 effsize_translate <- function(val, from, to, N = FALSE) {
   d <- 0.0
   r <- 0.0
@@ -384,11 +352,6 @@ effsize_translate <- function(val, from, to, N = FALSE) {
 #' @param x String (test).
 #'
 #' @return String (Test).
-#'
-#' @export
-#'
-#' @examples
-#' firstup("hello")
 firstup <- function(x) {
   x <- toString(x)
   substr(x, 1, 1) <- toupper(substr(x, 1, 1))
@@ -406,13 +369,6 @@ firstup <- function(x) {
 #' @return returns a formatted string.
 #'
 #' @importFrom crayon bold green red
-#'
-#' @export
-#'
-#' @examples
-#' cat(resultcol(TRUE, "s"))
-#' cat(resultcol(FALSE, "n"))
-#' cat(resultcol(NA, "n"))
 resultcol <- function(var, test) {
   if (!is.na(var) && !is.null(var) && !is.nan(var)) {
     if (var == TRUE) {

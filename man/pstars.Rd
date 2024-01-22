@@ -19,6 +19,3 @@ String.
 \description{
 Print stars of p-value
 }
-\examples{
-pstars(.005)
-}

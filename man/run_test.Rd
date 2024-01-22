@@ -21,9 +21,3 @@ Boolean if normal.
 \description{
 Runs a normality test
 }
-\examples{
-run_test("ad", rnorm(100))
-run_test("cv", runif(100))
-run_test("jc", rbeta(100, 10, 2))
-run_test("rc", rbeta(100, 2, 10))
-}

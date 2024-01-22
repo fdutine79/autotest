@@ -15,9 +15,3 @@ Returns the p-value as string (e.g., p < .001).
 \description{
 Formats the p.value for reporting purposes
 }
-\examples{
-reportp(0.00012)
-reportp(0.00123)
-reportp(0.01234)
-reportp(0.13456)
-}

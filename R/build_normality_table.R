@@ -182,12 +182,6 @@ build_normality_table <- function(rounds = 100, fibonacci = 30, alpha = .05, alp
 #' @param alphacc Maximum accepted contingency coefficient for `jc` and `rc`.
 #'
 #' @return Integer 0|1.
-#'
-#' @export
-#'
-#' @examples
-#' get_result("sf", rnorm(233), TRUE)
-#' get_result("rc", rbeta(233, 10, 2), TRUE)
 get_result <- function(test, data, expected, alpha = .05, alphacc = .30) {
   if (run_test(test, data, alpha = alpha, alphacc = alphacc) == expected) {
     return(1)
@@ -211,14 +205,6 @@ get_result <- function(test, data, expected, alpha = .05, alphacc = .30) {
 #' @importFrom stats ks.test na.omit shapiro.test
 #' @importFrom lawstat rjb.test
 #' @importFrom moments agostino.test
-#'
-#' @export
-#'
-#' @examples
-#' run_test("ad", rnorm(100))
-#' run_test("cv", runif(100))
-#' run_test("jc", rbeta(100, 10, 2))
-#' run_test("rc", rbeta(100, 2, 10))
 run_test <- function(test, data, alpha = .05, alphacc = .30) {
   if (test == "ad") { # Anderson Darling
     is_normal <- suppressWarnings(

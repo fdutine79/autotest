@@ -271,7 +271,6 @@ test_correl <- function(
 #' @importFrom common spaces
 #' @importFrom crayon bold green red yellow
 #' @importFrom dplyr mutate_if
-#' @export
 #'
 #' @examples
 #' report(test_correl("len", "dose", ToothGrowth))

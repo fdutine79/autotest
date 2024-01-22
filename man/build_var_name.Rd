@@ -15,8 +15,3 @@ Returns a string with the formatted \code{v_var_name}.
 \description{
 Builds the var_name for data without data frame
 }
-\examples{
-build_var_name("ToothGrowth$len")
-build_var_name("ToothGrowth[len]")
-build_var_name("ToothGrowth[[len]]")
-}

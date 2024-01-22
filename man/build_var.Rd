@@ -19,9 +19,3 @@ Returns structure-formatted data.
 \description{
 Builds the var for data with and without data frame
 }
-\examples{
-build_var(ToothGrowth$len, "numeric")
-build_var(ToothGrowth["len"], "numeric")
-build_var(ToothGrowth[["len"]], "numeric")
-build_var("len", "numeric", ToothGrowth)
-}

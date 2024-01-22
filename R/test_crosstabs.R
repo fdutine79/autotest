@@ -293,8 +293,6 @@ test_crosstabs <- function(
 #' @importFrom common spaces
 #' @importFrom crayon bold green red
 #'
-#' @export
-#'
 #' @examples
 #' report(test_crosstabs("cyl", "vs", mtcars))
 #' report(test_crosstabs(mtcars$cyl, mtcars$vs))

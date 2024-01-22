@@ -406,8 +406,6 @@ test_anova <- function(x, y, data = "", alpha = .05) {
 #' @importFrom crayon bold green red
 #' @importFrom stringr str_trim
 #'
-#' @export
-#'
 #' @examples
 #' report(test_anova("weight", "feed", chickwts))
 #' report(test_anova("Sepal.Length", "Species", iris))

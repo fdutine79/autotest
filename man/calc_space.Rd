@@ -19,8 +19,3 @@ Returns an integer of required space.
 \description{
 Calculates amount of spaces for reporting
 }
-\examples{
-calc_space("This is a test", c("This", "is", "a", "test"), 34)
-calc_space("This", c("This is a test", "is", "a", "test"), 34)
-calc_space("This", c("This is a test", "is", "a", "test"))
-}
