@@ -15,3 +15,6 @@ String (Test).
 \description{
 Capitalize first letter
 }
+\examples{
+firstup("hello")
+}
