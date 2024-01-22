@@ -4,3 +4,97 @@ output: github_document
 
 # autotest
 
+The goal of autotest is automatic testing of statistical tests.
+
+## Installation
+
+You can install the development version of autotest from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("fdutine79/autotest")
+```
+
+or simply install [loadenv](https://github.com/fdutine79/loadenv) and put a reference in your `packages` list when using `loadenv::load_environment(packages)`:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("fdutine79/loadenv")
+
+packages <- c(
+  "fdutine79/autotest"
+)
+loadenv::load_environment(packages)
+```
+
+## Test functions
+
+autotest provides various standard statistical test functions. The correct tests, depending on sample size, normality, homogeneity, and various other parameters are selected automatically. You will be free of running `levene.test()`to get homogeneity and there is no need to analyse every distribution visually for normality (even sometimes you are prompted to do so).
+
+Start with loading autotest or use the [loadenv](https://github.com/fdutine79/loadenv) as described above.
+
+``` r
+library(autotest)
+```
+
+### Test for normality
+
+Based on a sample dependent `normality_table.R`, the function `test_normality()` performs a check if a numeric sample can be considered normal or not. Included are 13 different statistical normality methods. Expected is a numeric vector. The result returns a list of all parameters to be used in your own functions or for reporting purposes.
+
+#### Examples
+
+First let us check normality for `ToothGrowth$len`:
+
+``` r
+test <- test_normality(ToothGrowth$len)
+```
+
+Then let us report the result for quick identification. Just wrap the `$result` in `cat()`.
+
+``` r
+cat(test$result)
+```
+
+At last show a full report of the function:
+
+``` r
+report(test)
+```
+
+Please be advised that statistical analysis for normality might be incorrect or biased. That is why it is recommended not only to rely on the statistical results but also your vision. In case of antithetical results of multiple tests applied (that happens from time to time), you will therefore be prompted to view the distribution and make the decision yourself.
+
+Feel free to explore all other parameters, included in the list.
+
+### Test correlation
+
+Pearson, Spearmann, Kendall? Let the data decide! The function `test_correl()` expects two numeric arguments. Be advised to put the x-axis variable first (for plotting reasons).
+
+Both variables must be normal, as proven by `test_normality()` function to pass requirements for Pearson. Sample size must be \>= 30 to pass Pearson requirements and \>= 10 to pass for Spearman.
+
+Feel free to add arguments `alternative = c("two.sided", "greater", "less")` and maximum acceptable p-level `alpha = .05`.
+
+#### Examples
+
+First let us test correlation between `ToothGrowth$len` and `ToothGrowth$dose`:
+
+``` r
+test <- test_correl(ToothGrowth$len, ToothGrowth$dose)
+
+# By the way: it works like this as well:
+# test <- test_correl("len", "dose", ToothGrowth)
+# test <- test_correl(ToothGrowth[["len"]], ToothGrowth[["dose"]])
+```
+
+Then let us report the result for quick identification. Just wrap the `$result` in `cat()`.
+
+``` r
+cat(test$result)
+```
+
+At last show a full report of the function:
+
+``` r
+report(test)
+```
+
+Feel free to explore all other parameters, included in the list.
