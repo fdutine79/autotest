@@ -98,3 +98,37 @@ report(test)
 ```
 
 Feel free to explore all other parameters, included in the list.
+
+### Test mean differences
+
+Compare mean differences using `test_ttest()`. The function performs a parametric T- or Welch-Test or a non-parametric Wilcoxon, repectively Mann-Whitney U test. Give a metric variable as first parameter and a factored or character variable (grouping) as second parameter.
+
+Dependent variable must be normal within each group as proven by `test_normality()` function, and \>= 30 to pass for parametric tests. Variances tested by `leveneTest()` must be homogeneous to pass for T-Test, else Welch-Test is used.
+
+Arguments may be passed, such as `paired = bool`, `alternative = c("two.sided", "greater", "less")` and maximum acceptable p-level `alpha = .05`.
+
+#### Examples
+
+First let us test mean differences within `ToothGrowth$len` and `ToothGrowth$supp`:
+
+``` r
+test <- test_ttest(ToothGrowth$len, ToothGrowth$dose)
+```
+
+Then let us report the result for quick identification. Just wrap the `$result` in `cat()`.
+
+``` r
+cat(test$result)
+```
+
+At last show a full report of the function:
+
+``` r
+report(test)
+```
+
+Feel free to explore all other parameters, included in the list.
+
+### Test crosstabs
+
+
