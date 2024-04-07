@@ -134,8 +134,8 @@ factored or character variable (grouping) as second parameter.
 
 Dependent variable must be normal within each group as proven by
 `test_normality()` function, and $\ge 30$ to pass for parametric tests.
-Variances tested by `leveneTest()` must be homogeneous to pass for
-T-Test, else Welch-Test is used.
+Variances tested by `leveneTest()` (critical limit p-value $\ge .01$)
+must be homogeneous to pass for T-Test, else Welch-Test is used.
 
 Arguments may be passed, such as `paired = bool`,
 `alternative = c("two.sided", "greater", "less")` and maximum acceptable
@@ -171,9 +171,9 @@ Use `test_crosstabs()` to run tests for categorical scales. The function
 requires two numeric or factored variables. For $2 \times 2$ contingency
 tables you might event want to test directed hypotheses by supplying
 `alternative = c("greater", "less")` (which is ignored to fall-back
-`"two.sided"` for larger contingency tables \[$df \gt 1$\]). For
-directed hypotheses, p-values are divided by $2$ (Pearson’s chi-squared
-test only).
+`"two.sided"` for larger contingency tables \[$\gt 1$\]). For directed
+hypotheses, p-values are divided by $2$ (Pearson’s chi-squared test
+only).
 
 Continuity correction is applied for $2 \times 2$ contingency tables if
 the maximum number of values per row/column reaches below $40$. Minimum
@@ -191,6 +191,49 @@ First let us test crosstabs between `mtcars$cyl` and `mtcars$vs`:
 
 ``` r
 test <- test_crosstabs(mtcars$cyl, mtcars$vs)
+```
+
+Then let us report the result for quick identification. Just wrap the
+`$result` in `cat()`.
+
+``` r
+cat(test$result)
+```
+
+At last show a full report of the function:
+
+``` r
+report(test)
+```
+
+Feel free to explore all other parameters, included in the list.
+
+### Test crosstabs
+
+To test mean differences of multiple ($\gt 2$) groups, apply the
+`test_anova()` function. The function requires a metric dependent
+variable and a categorical independent grouping variable with more than
+two groups. The argument `alpha = .05` may be passed to set the maximum
+acceptable p-level.
+
+All grouped values should pass normality as tested by `test_normality()`
+function, and size of $\ge 20$ to pass for parametric tests (ANOVA).
+Variances tested by `leveneTest()` (critical limit p-value $\ge .01$)
+must be homogeneous to pass for ANOVA, else One-Way-Test (Welch-Test) is
+used where variances are not necessarily assumed to be equal. As
+non-parametric test Kruskal-Wallis (KWH) rank sum test is applied.
+
+Post hoc analysis is performed by Pairwise T-Test for parametric tests
+(ANOVA) and pairwise Wilcoxon rank sum Test for non-parametric tests
+(KWH).
+
+#### Examples
+
+First let us test analysis of variance with `iris$Sepal.Length` and
+`iris$Species`:
+
+``` r
+test <- test_anova("Sepal.Length", "Species", iris)
 ```
 
 Then let us report the result for quick identification. Just wrap the
