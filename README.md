@@ -87,6 +87,22 @@ Feel free to explore all other parameters, included in the list:
 View(test)
 ```
 
+#### Report
+
+<figure>
+<img src="img/test_normality_report.png"
+alt="Report of test_normality() (ToothGrowth$len)" />
+<figcaption aria-hidden="true">Report of <code>test_normality()</code>
+(<code>ToothGrowth$len</code>)</figcaption>
+</figure>
+
+<figure>
+<img src="img/test_normality_plot.png"
+alt="Plot of test_normality() (ToothGrowth$len)" />
+<figcaption aria-hidden="true">Plot of <code>test_normality()</code>
+(<code>ToothGrowth$len</code>)</figcaption>
+</figure>
+
 ### Test correlation
 
 Pearson, Spearmann, Kendall? Let the data decide! The function
@@ -133,6 +149,24 @@ Feel free to explore all other parameters, included in the list:
 View(test)
 ```
 
+#### Report
+
+<figure>
+<img src="img/test_correl_report.png"
+alt="Report of test_correl() (ToothGrowth$len, ToothGrowth$dose)" />
+<figcaption aria-hidden="true">Report of <code>test_correl()</code>
+(<code>ToothGrowth$len</code>,
+<code>ToothGrowth$dose</code>)</figcaption>
+</figure>
+
+<figure>
+<img src="img/test_correl_plot.png"
+alt="Plot of test_correl() (ToothGrowth$len, ToothGrowth$dose)" />
+<figcaption aria-hidden="true">Plot of <code>test_correl()</code>
+(<code>ToothGrowth$len</code>,
+<code>ToothGrowth$dose</code>)</figcaption>
+</figure>
+
 ### Test mean differences
 
 Compare mean differences using `test_ttest()`. The function performs a
@@ -176,6 +210,24 @@ Feel free to explore all other parameters, included in the list:
 ``` r
 View(test)
 ```
+
+#### Report
+
+<figure>
+<img src="img/test_ttest_report.png"
+alt="Report of test_ttest() (ToothGrowth$len, ToothGrowth$supp)" />
+<figcaption aria-hidden="true">Report of <code>test_ttest()</code>
+(<code>ToothGrowth$len</code>,
+<code>ToothGrowth$supp</code>)</figcaption>
+</figure>
+
+<figure>
+<img src="img/test_ttest_plot.png"
+alt="Plot of test_ttest() (ToothGrowth$len, ToothGrowth$supp)" />
+<figcaption aria-hidden="true">Plot of <code>test_ttest()</code>
+(<code>ToothGrowth$len</code>,
+<code>ToothGrowth$supp</code>)</figcaption>
+</figure>
 
 ### Test crosstabs
 
@@ -224,6 +276,22 @@ Feel free to explore all other parameters, included in the list:
 View(test)
 ```
 
+#### Report
+
+<figure>
+<img src="img/test_crosstabs_report.png"
+alt="Report of test_crosstabs() (mtcars$cyl, mtcars$vs)" />
+<figcaption aria-hidden="true">Report of <code>test_crosstabs()</code>
+(<code>mtcars$cyl</code>, <code>mtcars$vs</code>)</figcaption>
+</figure>
+
+<figure>
+<img src="img/test_crosstabs_plot.png"
+alt="Plot of test_crosstabs() (mtcars$cyl, mtcars$vs)" />
+<figcaption aria-hidden="true">Plot of <code>test_crosstabs()</code>
+(<code>mtcars$cyl</code>, <code>mtcars$vs</code>)</figcaption>
+</figure>
+
 ### Test ANOVA
 
 To test mean differences of multiple ($\gt 2$) groups, apply the
@@ -270,3 +338,19 @@ Feel free to explore all other parameters, included in the list:
 ``` r
 View(test)
 ```
+
+#### Report
+
+<figure>
+<img src="img/test_anova_report.png"
+alt="Report of test_anova() (iris$Sepal.Length, iris$Species)" />
+<figcaption aria-hidden="true">Report of <code>test_anova()</code>
+(<code>iris$Sepal.Length</code>, <code>iris$Species</code>)</figcaption>
+</figure>
+
+<figure>
+<img src="img/test_anova_plot.png"
+alt="Plot of test_anova() (iris$Sepal.Length, iris$Species)" />
+<figcaption aria-hidden="true">Plot of <code>test_anova()</code>
+(<code>iris$Sepal.Length</code>, <code>iris$Species</code>)</figcaption>
+</figure>

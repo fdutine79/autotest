@@ -69,6 +69,12 @@ Feel free to explore all other parameters, included in the list:
 View(test)
 ```
 
+#### Report
+
+![Report of `test_normality()` (`ToothGrowth$len`)](img/test_normality_report.png)
+
+![Plot of `test_normality()` (`ToothGrowth$len`)](img/test_normality_plot.png)
+
 ### Test correlation
 
 Pearson, Spearmann, Kendall? Let the data decide! The function `test_correl()` expects two numeric arguments. Be advised to put the x-axis variable first (for plotting reasons).
@@ -107,6 +113,12 @@ Feel free to explore all other parameters, included in the list:
 View(test)
 ```
 
+#### Report
+
+![Report of `test_correl()` (`ToothGrowth$len`, `ToothGrowth$dose`)](img/test_correl_report.png)
+
+![Plot of `test_correl()` (`ToothGrowth$len`, `ToothGrowth$dose`)](img/test_correl_plot.png)
+
 ### Test mean differences
 
 Compare mean differences using `test_ttest()`. The function performs a parametric T- or Welch-Test or a non-parametric Wilcoxon, repectively Mann-Whitney U test. Give a metric variable as first parameter and a factored or character variable (grouping) as second parameter.
@@ -140,6 +152,12 @@ Feel free to explore all other parameters, included in the list:
 ``` r
 View(test)
 ```
+
+#### Report
+
+![Report of `test_ttest()` (`ToothGrowth$len`, `ToothGrowth$supp`)](img/test_ttest_report.png)
+
+![Plot of `test_ttest()` (`ToothGrowth$len`, `ToothGrowth$supp`)](img/test_ttest_plot.png)
 
 ### Test crosstabs
 
@@ -175,6 +193,12 @@ Feel free to explore all other parameters, included in the list:
 View(test)
 ```
 
+#### Report
+
+![Report of `test_crosstabs()` (`mtcars$cyl`, `mtcars$vs`)](img/test_crosstabs_report.png)
+
+![Plot of `test_crosstabs()` (`mtcars$cyl`, `mtcars$vs`)](img/test_crosstabs_plot.png)
+
 ### Test ANOVA
 
 To test mean differences of multiple ($\gt 2$) groups, apply the `test_anova()` function. The function requires a metric dependent variable and a categorical independent grouping variable with more than two groups. The argument `alpha = .05` may be passed to set the maximum acceptable p-level.
@@ -208,3 +232,9 @@ Feel free to explore all other parameters, included in the list:
 ``` r
 View(test)
 ```
+
+#### Report
+
+![Report of `test_anova()` (`iris$Sepal.Length`, `iris$Species`)](img/test_anova_report.png)
+
+![Plot of `test_anova()` (`iris$Sepal.Length`, `iris$Species`)](img/test_anova_plot.png)
