@@ -171,7 +171,7 @@ Use `test_crosstabs()` to run tests for categorical scales. The function
 requires two numeric or factored variables. For $2 \times 2$ contingency
 tables you might event want to test directed hypotheses by supplying
 `alternative = c("greater", "less")` (which is ignored to fall-back
-`"two.sided"` for larger contingency tables \[$\gt 1$\]). For directed
+`"two.sided"` for larger contingency tables $df \gt 1$). For directed
 hypotheses, p-values are divided by $2$ (Pearson’s chi-squared test
 only).
 
@@ -208,7 +208,7 @@ report(test)
 
 Feel free to explore all other parameters, included in the list.
 
-### Test crosstabs
+### Test ANOVA
 
 To test mean differences of multiple ($\gt 2$) groups, apply the
 `test_anova()` function. The function requires a metric dependent
