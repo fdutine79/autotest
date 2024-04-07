@@ -1,6 +1,6 @@
 Package: autotest
 Title: Automatic testing of statistical tests
-Version: 1.0.7
+Version: 1.0.8
 Authors@R: 
     person("Frank", "Dutine", , "mail@frankdutine.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0926-9116"))
