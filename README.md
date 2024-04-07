@@ -81,7 +81,11 @@ results of multiple tests applied (that happens from time to time), you
 will therefore be prompted to view the distribution and make the
 decision yourself.
 
-Feel free to explore all other parameters, included in the list.
+Feel free to explore all other parameters, included in the list:
+
+``` r
+View(test)
+```
 
 ### Test correlation
 
@@ -123,7 +127,11 @@ At last show a full report of the function:
 report(test)
 ```
 
-Feel free to explore all other parameters, included in the list.
+Feel free to explore all other parameters, included in the list:
+
+``` r
+View(test)
+```
 
 ### Test mean differences
 
@@ -163,7 +171,11 @@ At last show a full report of the function:
 report(test)
 ```
 
-Feel free to explore all other parameters, included in the list.
+Feel free to explore all other parameters, included in the list:
+
+``` r
+View(test)
+```
 
 ### Test crosstabs
 
@@ -206,7 +218,11 @@ At last show a full report of the function:
 report(test)
 ```
 
-Feel free to explore all other parameters, included in the list.
+Feel free to explore all other parameters, included in the list:
+
+``` r
+View(test)
+```
 
 ### Test ANOVA
 
@@ -249,4 +265,8 @@ At last show a full report of the function:
 report(test)
 ```
 
-Feel free to explore all other parameters, included in the list.
+Feel free to explore all other parameters, included in the list:
+
+``` r
+View(test)
+```
