@@ -147,7 +147,7 @@ First let us test mean differences within `ToothGrowth$len` and
 `ToothGrowth$supp`:
 
 ``` r
-test <- test_ttest(ToothGrowth$len, ToothGrowth$dose)
+test <- test_ttest(ToothGrowth$len, ToothGrowth$supp)
 ```
 
 Then let us report the result for quick identification. Just wrap the
