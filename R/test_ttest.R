@@ -151,7 +151,7 @@ test_ttest <- function(
   if (requirements_normal == FALSE || requirements_size == FALSE) {
     # Wilcoxon/MWU Test -----------------------------------------------------
 
-    test <- wilcox.test(x ~ y,
+    test <- wilcox.test(x, as.numeric(y),
       paired = paired,
       alternative = alternative,
       exact = ifelse(nrow_data < 40, TRUE, FALSE), # Field (2012, p. 659)
