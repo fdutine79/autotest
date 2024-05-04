@@ -1,6 +1,9 @@
-# Function test_ttest -----------------------------------------------------
+# Function test_means -----------------------------------------------------
 
 #' Perform a parametric T-/Welch-Test or a non-parametric Wilcoxon/MWU test
+#'
+#' @name test_means
+#' @rdname test_ttest
 #'
 #' @param x Name of column; dependent variable; metric values.
 #' @param y Name of grouping column; independent variable; categorical.
@@ -24,10 +27,10 @@
 #' @export
 #'
 #' @examples
-#' test_ttest("len", "supp", ToothGrowth)
-#' test_ttest(ToothGrowth$len, ToothGrowth$supp)
-#' test_ttest(ToothGrowth[["len"]], ToothGrowth[["supp"]])
-test_ttest <- function(
+#' test_means("len", "supp", ToothGrowth)
+#' test_means(ToothGrowth$len, ToothGrowth$supp)
+#' test_means(ToothGrowth[["len"]], ToothGrowth[["supp"]])
+test_means <- function(
     x, y, data = "",
     paired = FALSE, alternative = "two.sided", alpha = .05) {
   # Initiate List to be returned --------------------------------------------
@@ -222,7 +225,7 @@ test_ttest <- function(
 
       # Set report call
       return_list$report <- paste0(
-        "test_ttest.report(test_ttest(",
+        "test_means.report(test_means(",
         return_list$param$x_name, ", ",
         return_list$param$y_name, ", ",
         "paired = ", paired, ", ",
@@ -321,7 +324,7 @@ test_ttest <- function(
 
       # Set report call
       return_list$report <- paste0(
-        "test_ttest.report(test_ttest(",
+        "test_means.report(test_means(",
         return_list$param$x_name, ", ",
         return_list$param$y_name, ", ",
         "paired = ", paired, ", ",
@@ -357,11 +360,11 @@ test_ttest <- function(
 }
 
 
-# Reporting class for test_ttest ----------------------------------------
+# Reporting class for test_means ----------------------------------------
 
-#' Class to build a full report for test_ttest
+#' Class to build a full report for test_means
 #'
-#' @param object Object of test_ttest function
+#' @param object Object of test_means function
 #'
 #' @return Returns a full test report with simple figures
 #'
@@ -370,11 +373,11 @@ test_ttest <- function(
 #' @importFrom stringr str_trim
 #'
 #' @examples
-#' report(test_ttest("len", "supp", ToothGrowth))
-#' report(test_ttest(ToothGrowth$len, ToothGrowth$supp))
-#' report(test_ttest(ToothGrowth[["len"]], ToothGrowth[["supp"]]))
-test_ttest.report <- function(object) {
-  headline(paste0("T-Testing: '", object$param$x_var_name, "', '", object$param$y_var_name, "'"), 1)
+#' report(test_means("len", "supp", ToothGrowth))
+#' report(test_means(ToothGrowth$len, ToothGrowth$supp))
+#' report(test_means(ToothGrowth[["len"]], ToothGrowth[["supp"]]))
+test_means.report <- function(object) {
+  headline(paste0("Testing Means: '", object$param$x_var_name, "', '", object$param$y_var_name, "'"), 1)
 
   headline(paste0("Descriptive"), 2)
   print(object$descriptive$x_by_y)

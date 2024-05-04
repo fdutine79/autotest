@@ -121,7 +121,7 @@ View(test)
 
 ### Test mean differences
 
-Compare mean differences using `test_ttest()`. The function performs a parametric T- or Welch-Test or a non-parametric Wilcoxon, repectively Mann-Whitney U test. Give a metric variable as first parameter and a factored or character variable (grouping) as second parameter.
+Compare mean differences using `test_means()` (former `test_ttest()`). The function performs a parametric T- or Welch-Test or a non-parametric Wilcoxon, repectively Mann-Whitney U test. Give a metric variable as first parameter and a factored or character variable (grouping) as second parameter.
 
 Dependent variable must be normal within each group as proven by `test_normality()` function, and $\ge 30$ to pass for parametric tests. Variances tested by `leveneTest()` (critical limit p-value $\ge .01$) must be homogeneous to pass for T-Test, else Welch-Test is used.
 
@@ -132,7 +132,7 @@ Arguments may be passed, such as `paired = bool`, `alternative = c("two.sided", 
 First let us test mean differences within `ToothGrowth$len` and `ToothGrowth$supp`:
 
 ``` r
-test <- test_ttest(ToothGrowth$len, ToothGrowth$supp)
+test <- test_means(ToothGrowth$len, ToothGrowth$supp)
 ```
 
 Then let us report the result for quick identification. Just wrap the `$result` in `cat()`.
@@ -155,9 +155,9 @@ View(test)
 
 #### Report
 
-![Report of `test_ttest()` (`ToothGrowth$len`, `ToothGrowth$supp`)](img/test_ttest_report.png)
+![Report of `test_means()` (`ToothGrowth$len`, `ToothGrowth$supp`)](img/test_ttest_report.png)
 
-![Plot of `test_ttest()` (`ToothGrowth$len`, `ToothGrowth$supp`)](img/test_ttest_plot.png)
+![Plot of `test_means()` (`ToothGrowth$len`, `ToothGrowth$supp`)](img/test_ttest_plot.png)
 
 ### Test crosstabs
 

@@ -169,10 +169,11 @@ alt="Plot of test_correl() (ToothGrowth$len, ToothGrowth$dose)" />
 
 ### Test mean differences
 
-Compare mean differences using `test_ttest()`. The function performs a
-parametric T- or Welch-Test or a non-parametric Wilcoxon, repectively
-Mann-Whitney U test. Give a metric variable as first parameter and a
-factored or character variable (grouping) as second parameter.
+Compare mean differences using `test_means()` (former `test_ttest()`).
+The function performs a parametric T- or Welch-Test or a non-parametric
+Wilcoxon, repectively Mann-Whitney U test. Give a metric variable as
+first parameter and a factored or character variable (grouping) as
+second parameter.
 
 Dependent variable must be normal within each group as proven by
 `test_normality()` function, and $\ge 30$ to pass for parametric tests.
@@ -189,7 +190,7 @@ First let us test mean differences within `ToothGrowth$len` and
 `ToothGrowth$supp`:
 
 ``` r
-test <- test_ttest(ToothGrowth$len, ToothGrowth$supp)
+test <- test_means(ToothGrowth$len, ToothGrowth$supp)
 ```
 
 Then let us report the result for quick identification. Just wrap the
@@ -215,16 +216,16 @@ View(test)
 
 <figure>
 <img src="img/test_ttest_report.png"
-alt="Report of test_ttest() (ToothGrowth$len, ToothGrowth$supp)" />
-<figcaption aria-hidden="true">Report of <code>test_ttest()</code>
+alt="Report of test_means() (ToothGrowth$len, ToothGrowth$supp)" />
+<figcaption aria-hidden="true">Report of <code>test_means()</code>
 (<code>ToothGrowth$len</code>,
 <code>ToothGrowth$supp</code>)</figcaption>
 </figure>
 
 <figure>
 <img src="img/test_ttest_plot.png"
-alt="Plot of test_ttest() (ToothGrowth$len, ToothGrowth$supp)" />
-<figcaption aria-hidden="true">Plot of <code>test_ttest()</code>
+alt="Plot of test_means() (ToothGrowth$len, ToothGrowth$supp)" />
+<figcaption aria-hidden="true">Plot of <code>test_means()</code>
 (<code>ToothGrowth$len</code>,
 <code>ToothGrowth$supp</code>)</figcaption>
 </figure>
