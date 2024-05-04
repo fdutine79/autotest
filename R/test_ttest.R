@@ -257,7 +257,7 @@ test_ttest <- function(
 
     # T-Test ----------------------------------------------------------------
 
-    test <- t.test(x ~ y,
+    test <- t.test(x, as.numeric(y),
       var.equal = return_list$reqs$variance$is.homo,
       paired = paired,
       alternative = alternative
