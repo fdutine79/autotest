@@ -154,7 +154,25 @@ test_means <- function(
   if (requirements_normal == FALSE || requirements_size == FALSE) {
     # Wilcoxon/MWU Test -----------------------------------------------------
 
-    test <- wilcox.test(x, as.numeric(y),
+    # Split Groups
+    dataframe_groups <- unique(dataframe$y)
+
+    group1 <- dataframe |>
+      dplyr::filter(y == dataframe_groups[1]) |>
+      dplyr::select(x) |>
+      na.omit() |>
+      unlist() |>
+      as.numeric()
+
+    group2 <- dataframe |>
+      dplyr::filter(y == dataframe_groups[2]) |>
+      dplyr::select(x) |>
+      na.omit() |>
+      unlist() |>
+      as.numeric()
+
+    # Test
+    test <- wilcox.test(group1, group2,
       paired = paired,
       alternative = alternative,
       exact = ifelse(nrow_data < 40, TRUE, FALSE), # Field (2012, p. 659)
@@ -260,7 +278,25 @@ test_means <- function(
 
     # T-Test ----------------------------------------------------------------
 
-    test <- t.test(x, as.numeric(y),
+    # Split Groups
+    dataframe_groups <- unique(dataframe$y)
+
+    group1 <- dataframe |>
+      dplyr::filter(y == dataframe_groups[1]) |>
+      dplyr::select(x) |>
+      na.omit() |>
+      unlist() |>
+      as.numeric()
+
+    group2 <- dataframe |>
+      dplyr::filter(y == dataframe_groups[2]) |>
+      dplyr::select(x) |>
+      na.omit() |>
+      unlist() |>
+      as.numeric()
+
+    # Test
+    test <- t.test(group1, group2,
       var.equal = return_list$reqs$variance$is.homo,
       paired = paired,
       alternative = alternative
@@ -296,7 +332,7 @@ test_means <- function(
       ))
 
       # Find Magnitude
-      d <- effsize::cohen.d(x ~ y,
+      d <- effsize::cohen.d(group1, group2,
         pooled = return_list$reqs$variance$is.homo,
         paired = paired
       )
