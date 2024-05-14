@@ -155,16 +155,16 @@ test_means <- function(
     # Wilcoxon/MWU Test -----------------------------------------------------
 
     # Split Groups
-    dataframe_groups <- unique(dataframe$y)
+    dataframe_groups <- sort(unique(dataframe$y))
 
-    group1 <- dataframe |>
+    group_1 <- dataframe |>
       dplyr::filter(y == dataframe_groups[1]) |>
       dplyr::select(x) |>
       na.omit() |>
       unlist() |>
       as.numeric()
 
-    group2 <- dataframe |>
+    group_2 <- dataframe |>
       dplyr::filter(y == dataframe_groups[2]) |>
       dplyr::select(x) |>
       na.omit() |>
@@ -172,7 +172,7 @@ test_means <- function(
       as.numeric()
 
     # Test
-    test <- wilcox.test(group1, group2,
+    test <- wilcox.test(group_1, group_2,
       paired = paired,
       alternative = alternative,
       exact = ifelse(nrow_data < 40, TRUE, FALSE), # Field (2012, p. 659)
@@ -279,16 +279,16 @@ test_means <- function(
     # T-Test ----------------------------------------------------------------
 
     # Split Groups
-    dataframe_groups <- unique(dataframe$y)
+    dataframe_groups <- sort(unique(dataframe$y))
 
-    group1 <- dataframe |>
+    group_1 <- dataframe |>
       dplyr::filter(y == dataframe_groups[1]) |>
       dplyr::select(x) |>
       na.omit() |>
       unlist() |>
       as.numeric()
 
-    group2 <- dataframe |>
+    group_2 <- dataframe |>
       dplyr::filter(y == dataframe_groups[2]) |>
       dplyr::select(x) |>
       na.omit() |>
@@ -296,7 +296,7 @@ test_means <- function(
       as.numeric()
 
     # Test
-    test <- t.test(group1, group2,
+    test <- t.test(group_1, group_2,
       var.equal = return_list$reqs$variance$is.homo,
       paired = paired,
       alternative = alternative
@@ -332,7 +332,7 @@ test_means <- function(
       ))
 
       # Find Magnitude
-      d <- effsize::cohen.d(group1, group2,
+      d <- effsize::cohen.d(group_1, group_2,
         pooled = return_list$reqs$variance$is.homo,
         paired = paired
       )
