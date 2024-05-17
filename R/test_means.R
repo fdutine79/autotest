@@ -3,7 +3,6 @@
 #' Perform a parametric T-/Welch-Test or a non-parametric Wilcoxon/MWU test
 #'
 #' @name test_means
-#' @rdname test_ttest
 #'
 #' @param x Name of column; dependent variable; metric values.
 #' @param y Name of grouping column; independent variable; categorical.
@@ -394,6 +393,16 @@ test_means <- function(
 
   return(return_list)
 }
+
+
+# Alias for test_means (deprecated) ---------------------------------------
+
+#' Perform a parametric T-/Welch-Test or a non-parametric Wilcoxon/MWU test
+#'
+#' @rdname test_means
+#' @section \code{test_ttest}:
+#' For \code{test_ttest}, use \code{\link{test_means}}.
+test_ttest <- test_means
 
 
 # Reporting class for test_means ----------------------------------------

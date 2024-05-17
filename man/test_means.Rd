@@ -2,9 +2,19 @@
 % Please edit documentation in R/test_means.R
 \name{test_means}
 \alias{test_means}
+\alias{test_ttest}
 \title{Perform a parametric T-/Welch-Test or a non-parametric Wilcoxon/MWU test}
 \usage{
 test_means(
+  x,
+  y,
+  data = "",
+  paired = FALSE,
+  alternative = "two.sided",
+  alpha = 0.05
+)
+
+test_ttest(
   x,
   y,
   data = "",
@@ -31,7 +41,14 @@ Returns a list of all results.
 }
 \description{
 Perform a parametric T-/Welch-Test or a non-parametric Wilcoxon/MWU test
+
+Perform a parametric T-/Welch-Test or a non-parametric Wilcoxon/MWU test
 }
+\section{\code{test_ttest}}{
+
+For \code{test_ttest}, use \code{\link{test_means}}.
+}
+
 \examples{
 test_means("len", "supp", ToothGrowth)
 test_means(ToothGrowth$len, ToothGrowth$supp)
