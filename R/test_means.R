@@ -20,7 +20,7 @@
 #' @importFrom graphics boxplot par
 #' @importFrom psych describeBy
 #' @importFrom stats t.test qnorm wilcox.test
-#' @importFrom stringr str_trim
+#' @importFrom stringr str_replace str_trim
 #' @importFrom tidyr drop_na
 #'
 #' @export
@@ -55,7 +55,21 @@ test_means <- function(
   x <- return_list$param$x
   y <- return_list$param$y
 
-  if (NROW(unique(y)) != 2) {
+  if (NROW(unique(y)) > 2) {
+    warning(paste0("\n\tGrouping factor must have exactly 2 levels\n\t", NROW(unique(y)), " groups were submitted: ", paste0(as.character(unique(y)), collapse = ", "), "\n\tUsing function `test_anova()` with paired and alternative params omitted"))
+
+    syscall <- tail(sys.calls(), n = 1)
+    if (!is.null(syscall[[1]][["paired"]])) {
+      syscall[[1]][["paired"]] <- NULL
+    }
+    if (!is.null(syscall[[1]][["alternative"]])) {
+      syscall[[1]][["alternative"]] <- NULL
+    }
+
+    return(
+      eval(parse(text = str_replace(as.character(syscall), "test_means", "test_anova")))
+    )
+  } else if (NROW(unique(y)) < 2) {
     warning("\n\tGrouping factor must have exactly 2 levels")
   }
   if (length(unique(x)) == 1) {
