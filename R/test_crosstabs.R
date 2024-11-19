@@ -259,7 +259,12 @@ test_crosstabs <- function(
         ),
         ifelse(
           df == 1,
-          paste0("OR = ", return_list$test[[1]]$estimate$`odds ratio`, "\n"),
+          paste0(
+            ", OR = ", format(round(as.numeric(return_list$test[[1]]$estimate["odds ratio"]), 2), nsmall = 2),
+            ", ", format(round(as.numeric((1 - alpha) * 100), 0), nsmall = 0), "% CI = [",
+            format(round(as.numeric(return_list$test[[1]]$conf.int[1]), 2), nsmall = 2), ", ",
+            format(round(as.numeric(return_list$test[[1]]$conf.int[2]), 2), nsmall = 2), "]\n"
+          ),
           "\n"
         )
       )
