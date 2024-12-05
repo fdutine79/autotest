@@ -10,13 +10,13 @@
 #' @importFrom common spaces
 #' @importFrom crayon bold green red yellow
 #' @importFrom dplyr filter
-#' @importFrom graphics boxplot hist mtext par
+#' @importFrom graphics boxplot hist lines mtext par
 #' @importFrom lawstat rjb.test
 #' @importFrom moments agostino.test
 #' @importFrom nortest ad.test cvm.test lillie.test pearson.test sf.test
 #' @importFrom psych describe
 #' @importFrom readr read_csv
-#' @importFrom stats na.omit shapiro.test density qqline qqnorm sd
+#' @importFrom stats na.omit rnorm shapiro.test density qqline qqnorm sd
 #' @importFrom stringr str_trim
 #'
 #' @export
@@ -416,7 +416,8 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
   return_list$plot <- paste0(
     "par(mfrow = c(2, 2))
-    plot(density(c(", paste(na.omit(x), collapse = ","), ")), ylim = c(0, max(density(rnorm(length(c(", paste(na.omit(x), collapse = ","), ")), mean = mean(c(", paste(na.omit(x), collapse = ","), ")), sd = 0))$y)), main = 'Density'); lines(density(rnorm(length(c(", paste(na.omit(x), collapse = ","), ")), mean = mean(c(", paste(na.omit(x), collapse = ","), ")), sd = 0)), col = 'grey', lty = 2)
+    plot(density(c(", paste(na.omit(x), collapse = ","), ")), ylim = c(0, max(max(density(c(", paste(na.omit(x), collapse = ","), "))$y), max(density(rnorm(length(c(", paste(na.omit(x), collapse = ","), ")), mean = mean(c(", paste(na.omit(x), collapse = ","), ")), sd = 0))$y))), main = 'Density')
+    lines(density(rnorm(length(c(", paste(na.omit(x), collapse = ","), ")), mean = mean(c(min(c(", paste(na.omit(x), collapse = ","), ")), max(c(", paste(na.omit(x), collapse = ","), ")))), sd = 0)), col = 'grey', lty = 2)
     hist(c(", paste(na.omit(x), collapse = ","), "), main = 'Histogram', xlab = '", return_list$param$x_var_name, "')
     qqnorm(c(", paste(na.omit(x), collapse = ","), "), main = 'Normal Q-Q Plot')
     qqline(c(", paste(na.omit(x), collapse = ","), "))
