@@ -416,7 +416,7 @@ test_normality <- function(x, data = "", alpha = .05, alphacc = .30) {
 
   return_list$plot <- paste0(
     "par(mfrow = c(2, 2))
-    plot(density(c(", paste(na.omit(x), collapse = ","), ")), main = 'Density')
+    plot(density(c(", paste(na.omit(x), collapse = ","), ")), ylim = c(0, max(density(rnorm(length(c(", paste(na.omit(x), collapse = ","), ")), mean = mean(c(", paste(na.omit(x), collapse = ","), ")), sd = 0))$y)), main = 'Density'); lines(density(rnorm(length(c(", paste(na.omit(x), collapse = ","), ")), mean = mean(c(", paste(na.omit(x), collapse = ","), ")), sd = 0)), col = 'grey', lty = 2)
     hist(c(", paste(na.omit(x), collapse = ","), "), main = 'Histogram', xlab = '", return_list$param$x_var_name, "')
     qqnorm(c(", paste(na.omit(x), collapse = ","), "), main = 'Normal Q-Q Plot')
     qqline(c(", paste(na.omit(x), collapse = ","), "))
