@@ -512,7 +512,7 @@ test_means.report <- function(object) {
   cat(paste0(
     "A ", ifelse(object$param$paired == TRUE, "paired ", ""), object$test[[1]]$method.alt, " for ", ifelse(object$param$paired == FALSE, "an independent", "a dependent"), " sample was computed to assess difference in means between group ",
     names(object$reqs$normal[1]), " (M = ", object$descriptive$x_by_y$mean[1], ", SD = ", object$descriptive$x_by_y$sd[1], ") and group ",
-    names(object$reqs$normal[2]), " (M = ", object$descriptive$x_by_y$mean[2], ", SD = ", object$descriptive$x_by_y$mean[2], ").\n"
+    names(object$reqs$normal[2]), " (M = ", object$descriptive$x_by_y$mean[2], ", SD = ", object$descriptive$x_by_y$sd[2], ").\n"
   ))
   cat(paste0("There was ", ifelse(object$is.significant == TRUE, "a ", "no "), "statistically significant difference between the two groups", ifelse(object$is.significant == TRUE, paste0(" with ", tolower(object$test[[1]]$estimate$magnitude), " effects"), ""), ".\n\n"))
   cat(object$result, "\n")
